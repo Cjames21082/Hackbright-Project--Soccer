@@ -19,17 +19,19 @@ Must Haves:
   and players
 * Ability for admin to email league and team leaders   
   team leaders to players, player to player
+* Ability for administrator to create/add/edit
+  different stat categories
 * Ability for user to search leagues near area
 * Analysis
 	- Generation Tool to create teams
-	- Player stats/rating
-	- Team stats/rating
+		* assign players a skill ranking based on stats and 
+		  use when balance teams are generated
+	- Show player stats/rating
+	- Show team stats/rating
 
 
 Should Have:
 * Ability for players to post comments to team
-* Ability for administrator to create different stat 
-  categories
 * Ability to search for different types of leagues 
   (i.e bowling, baseball, cooking classes, etc)
 * Ability for user to edit their information
