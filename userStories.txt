@@ -1,0 +1,72 @@
+*Must Haves:     **Should Have:    ***Nice to Have:
+
+************************Administrator***********************
+
+1. As an administrator, I want to be able to add team leader 
+	so that I can assign players later.
+	
+	Done when:
+		* I can add team leader through the web UI
+		* I can add a first and last name, and email address, team name
+		* Error message given if submission contain no data
+		* Allow for submission without an email
+		* Cannot add the same team leader to multiple teams
+		** No more that three team leaders per team
+		*** Can upload team leaders from a file through web UI
+
+2. As an administrator, I want to be able to edit a team leader
+   so that I can correct errors or add information from the 
+   initial entry.
+
+	Done when:
+		* I can edit team leader through the web UI
+		* I can change first and/or last name, team name, and 
+		  email address
+		* Error message given if first and/or last name blank
+
+3. As an administrator, I want to add players into the league 
+   so that I can later use to assign to a team 
+
+	Done when:
+		* I can add players thruough the web UI
+		*** I can upload players from a file through web UI
+
+4. As an administrator, I want to go to a page an email team
+   leaders so that I can send league reminders or instructions
+
+	Done when:
+		* I can visit a page and compose an email to team leaders
+
+5. As an administrator, I want to go to a page an email the 
+   league so that I can send league reminders, field changes,
+   etc
+	
+	Done when:
+		* I can visit a page and compose an email to team
+		  leaders and players
+
+6. As an administrator, I want to create player stats 
+   so that I can use store player information
+
+	Done when:
+		* I can go to a page and create a player stat table
+
+7. As an administrator, I want to add player stat information
+   so that I can later use to compare players with each other
+
+	Done when:
+		* I can add player stat in created table 
+
+8. As an administrator, I want to edit player stat information
+   so that I can update or correct information from a prior
+   entry
+
+	Done when:
+		* I can edit player stat in created table
+
+
+
+
+		 
+*************************User********************************
+
