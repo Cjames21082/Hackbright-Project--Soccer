@@ -1,0 +1,87 @@
+Tables
+===================================================================
+===================================================================
+
+
+#User
+	first_name
+	last_name
+	email
+	password
+	phone
+	address
+	city
+	state
+	zipcode
+	role (admin, team_leader, player)
+	age
+	gender
+
+#Role
+	admin
+	team_leader
+	player
+
+#Team
+	team_leader
+	players (list)
+	team_stats
+	team_game_schedule
+
+#TeamStats
+	team_id
+	total_wins
+	total_losses
+	total_ties
+	team_score
+
+#GameSchedule
+	location
+	date
+	time
+	home_team_name
+	away_team_name
+
+#GameScore
+	final_score
+	home_team_score
+	away_team_score
+
+#Player
+	player_stats
+	player_position(s)
+	player_health_issues
+	player_fitness (low, medium, high)
+	player_experience (years playing soccer)
+
+
+#Positions
+	forward
+	midfield
+	defense
+	goalie
+
+#Player Stats
+	goals
+	games_played
+	assists
+	foul_cards
+	goal_saves
+	player_strength
+
+#Registration_Form
+	enable = True
+	registration_fee_resident
+	registration_fee_nonresident
+	registration_start_date
+	registration_end_date
+
+#Season_Cycle
+	id
+	name
+	num_of_teams
+	season_fee_resident
+	season_fee_nonresident
+	
+
+	

@@ -1,72 +1,245 @@
-*Must Haves:     **Should Have:    ***Nice to Have:
+Project Idea: Soccer Team Mgmt Web Application
 
-************************Administrator***********************
+Concept: 
+Web application- Team management tool used to create 
+and organize a team league (i.e soccer) with four main functons:
 
-1. As an administrator, I want to be able to add team leader 
-	so that I can assign players later.
+1) Player Strength: analyze registered players based on initial    
+   self evaluation and historical stats from previous seasons
+2) Team creation: generate balanced teams based on player strength
+3) Send social and team emails from admin, team captian, player
+4) Search and find other team leagues (i.e soccer) near user's     
+   hometown.
+
+==================================================================
+MILESTONES
+==================================================================
+Release Version 1.0
+Database
+Functions:
+  Login Handler
+  Forms: Registration, Season_Cylce Settings
+  Matching Algorithm
+  Permission Roles= admin, team_leader, player
+  Email
+Presentation:
+  Web Application
+  Team List 
+  Team and Player Stat Graphs
+
+Release Version 1.1
+Added Functions:
+  Registration Payment
+  Search (other leagues)
+Added Presentation:
+  Game Similation
+
+
+
+
+==================================================================
+USER STORIES
+==================================================================
+
+Login Handler:
+---------------
+
+def login():
+* As a user I want to log into the web application so that I can see 
+  my user profile
+
+  Done when:
+  	- The login form will be available on login page
+  	- User must enter email and password
+  		* Click login button
+  		* Check that email and password in database
+  		* Log user into web session
+  		* Return user to login page if not in database or incorrect info
+  	- User will be redirected to user_profile
+  		* Default screen should display
+  			username: first_name, last_name, team_name
+
+def logout():
+* As a user I want to logout of the web application so that I can end
+  my session
+
+  Done when:
+    - user can click on a logout link or button
+    - web session with user cookie is removed
+    - user redirect to login page
+
+
+Forms:
+----------------
+
+def register():
+* As a player I want to register and (pay) for the soccer season so 
+  that I can later be assigned to a team
+
+  Done when:
+  	- Register link available on login page
+  	- Register form available on register page if registration is open
+  		* setting for admin to enable registration form
+  	- Validate information entered
+  		* check that required fields are entered 
+  		* make a hash of password
+		  * check that datatype fields are valid 
+		  * (Have a credit card type)
+		  * (check that credit card info is valid)
+  	  * Insert data into database
+  	  * (Send payment to league)
+  	  * Redirect user to login page to sign_in
+
+def seasonCycleForm ():
+* As an administrator I want to create a season cycle (name, 
+  # of teams, cost) so that I enable the registration period
+
+  Done when:
+  - Admin can access a link to the season_cycles
+  - Admin can view past season_cylces
+     * admin cannot edit past season_cycle if new cycle created
+  - Admin can create new_cycle
+    * clicks on button
+    * new cycle_form appears
+  - Admin will have option to enter cycle information
+    * admin fills out form
+      name (example Fall 2013)
+      num_of_teams = 5
+      season_fee_resident
+      season_fee_nonresident
+    * click on save button
+    * adds new cycle to database
+    * cannot edit previous cycle
+
+def GameSchedule()
+
+* As a player I want to see my team schedule so that I know when 
+  and where games will be played
+
+  Done when:
+    - Admin can create a calendar (like Google Calendar)
+    - The the league can access the calendar
+    - player select the menu item - Game Schedule
+    - Game schedule opens in a new web window
+
+
+Permission Roles:
+----------------------
+
+Profile
+
+def navbar():
+
+* As a user I want to see my navbar: i.e. settings,  
+  email, assign team leaders, register so that I can know 
+  what I can do in the web application
+
+  Done when:
+    - User is logged into application
+      * Default role setting is player, unless changed by admin
+    - narbar displayed on user profile
+      * Menu list should include
+        Teams
+        Player_Stats
+        Player_Team_Stats
+        Player_Team_Schedule
+        Email
+        League Search
+        (Admin Tools)
+    -User can access links to other pages
+
+Player/Team Leader:
+
+* As a player/team_leader I want to see my current strength and stats 
+  and link to historal stats so that I can see my strength and weakness
+
+  Done when:
+  	- User logged into application
+    - User Profile shows graph of skills and level (beginner, average,
+      experience)
+      * pull skills by player id and season id (current)
+        Example: offense dribbling, season 1 (current)
+      * skill should have a calculated value
+        Example: calculated value = 8 ( range 1-10)
+      * calculate value will fall into a range - beginner, avg,
+        experience
+        Example: Range = experience
+    - Use can access link to historical stats page
+
+Player/Team Leader:
+
+* As a player/team leader I want to see a list of my teammates/players 
+  and their stats so that I can gain knowledge on my teammates
+
+  Done when:
+  - player/team_leader can click on menu list Teams
+    * dropdown menu of the different teams
+  - user selects their team
+    * user can select other teams
+  - list of players and their skills/ranges displayed
+  - Sorting option: age range, position, skills
+
+Admin:
+ 
+* As an administrator I want to assign a user as team leader so 
+  that I can later assign players to their team
+
+  Done when:
+      - Admin can click on a link to team_setup that takes admin to
+        new page
+      - There is an option to assign team leaders
+      - Admin will be able to view registered user who opted to be 
+        team leaders
+      - Admin can view their skills and ranges 
+      - Admin assigns leader to a team
+        * Number of leaders determined by season_cycle setting
+        * one leader per team
+ 
+
+ Matching Algorithm:
+ -----------------------
+
+def createTeam():
+* As an administrator I want to assign players to a team so that I 
+  can create a league of teams
+
+  Done with:
+    - Admin can click on a link to create teams that take admin to 
+      new page
+    - The new page should show a list of registered players
+    - The teams leaders and team name should be listed
+    - Sorting options: Players can be viewed by positions,skill range, 
+                       age range
+    - Admin can click on generate team button to create teams
+      * matching algorithm used to distirbute players to a team
+    - Team summary returned 
+
+
+Email:
+-------------
+
+* As a team leader I want to email my team so that I inform them of 
+  game times and other team information
+  
+
+* As an administrator I want to email the league, team leader, or 
+  player so that I can send general or specific information
+
+
+* As a play I want to email my team so that I can send messages,
+  questions, comments about our game.
+
+
+Search: (Other Leagues)
+-----------
+
+* As a user I want to search for other leagues near my area so that   
+  I see other what other leagues I can join
+
+
+*******************************************************************
+
+
+
+
 	
-	Done when:
-		* I can add team leader through the web UI
-		* I can add a first and last name, and email address, team name
-		* Error message given if submission contain no data
-		* Allow for submission without an email
-		* Cannot add the same team leader to multiple teams
-		** No more that three team leaders per team
-		*** Can upload team leaders from a file through web UI
-
-2. As an administrator, I want to be able to edit a team leader
-   so that I can correct errors or add information from the 
-   initial entry.
-
-	Done when:
-		* I can edit team leader through the web UI
-		* I can change first and/or last name, team name, and 
-		  email address
-		* Error message given if first and/or last name blank
-
-3. As an administrator, I want to add players into the league 
-   so that I can later use to assign to a team 
-
-	Done when:
-		* I can add players thruough the web UI
-		*** I can upload players from a file through web UI
-
-4. As an administrator, I want to go to a page an email team
-   leaders so that I can send league reminders or instructions
-
-	Done when:
-		* I can visit a page and compose an email to team leaders
-
-5. As an administrator, I want to go to a page an email the 
-   league so that I can send league reminders, field changes,
-   etc
-	
-	Done when:
-		* I can visit a page and compose an email to team
-		  leaders and players
-
-6. As an administrator, I want to create player stats 
-   so that I can use store player information
-
-	Done when:
-		* I can go to a page and create a player stat table
-
-7. As an administrator, I want to add player stat information
-   so that I can later use to compare players with each other
-
-	Done when:
-		* I can add player stat in created table 
-
-8. As an administrator, I want to edit player stat information
-   so that I can update or correct information from a prior
-   entry
-
-	Done when:
-		* I can edit player stat in created table
-
-
-
-
-		 
-*************************User********************************
-
