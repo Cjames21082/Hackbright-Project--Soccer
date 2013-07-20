@@ -4,6 +4,7 @@ Tables
 
 
 #User
+	sysid - primary_key
 	first_name
 	last_name
 	email
@@ -18,70 +19,88 @@ Tables
 	gender
 
 #Role
-	admin
-	team_leader
-	player
+	sysid
+	role_name (admin, team_leader, player)
+	
 
 #Team
+	sysid - primary_key
+	season_cycle
 	team_leader
-	players (list)
+	team_name
+	players (list) # This is another table ( team_id, username)
 	team_stats
-	team_game_schedule
 
 #TeamStats
-	team_id
+	sysid
+	team_name
 	total_wins
 	total_losses
 	total_ties
-	team_score
+	team_score # want to associate with player and game
 
-#GameSchedule
-	location
-	date
-	time
-	home_team_name
-	away_team_name
+#Game
+	sysid
+	game_date
 
-#GameScore
-	final_score
-	home_team_score
-	away_team_score
+#Goal
+	sysid
+	player_id
+	game_id
 
 #Player
+	sysis
+	player_id
+	season_cycle
 	player_stats
-	player_position(s)
-	player_health_issues
-	player_fitness (low, medium, high)
-	player_experience (years playing soccer)
-
+	player_position
+	
+Player_Health_Issue
+many-to-many
+player
+issue
 
 #Positions
-	forward
-	midfield
-	defense
-	goalie
+	sysid
+	position_type (offense, midfield, defense, goalie)
 
 #Player Stats
-	goals
+	sysid
+	season_cycle_id
+	player_id
+	game_date_id
 	games_played
 	assists
+	offense_dribbling
+	offside calls
+	defensive stops
 	foul_cards
-	goal_saves
+	goals_saved
 	player_strength
+	player_health_issues 
+	player_fitness (low, medium, high)
+	player_experience (years playing soccer)
+	player_age
 
 #Registration_Form
-	enable = True
+	sysid
+	enable = Boolean
+	season_cycle
 	registration_fee_resident
 	registration_fee_nonresident
 	registration_start_date
 	registration_end_date
+	team_leader_option = Boolean
+	health_issue (Initial thought: list with number rankings)
+
 
 #Season_Cycle
-	id
-	name
+	sysid
+	cycle_name
 	num_of_teams
+	team_names
 	season_fee_resident
 	season_fee_nonresident
-	
+
 
 	
