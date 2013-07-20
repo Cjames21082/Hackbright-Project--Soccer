@@ -9,98 +9,102 @@ Tables
 	last_name
 	email
 	password
-	phone
 	address
 	city
 	state
 	zipcode
-	role (admin, team_leader, player)
+	role_id (admin, team_leader, player)
 	age
 	gender
 
 #Role
-	sysid
+	sysid- primary_key
 	role_name (admin, team_leader, player)
-	
-
-#Team
-	sysid - primary_key
-	season_cycle
-	team_leader
-	team_name
-	players (list) # This is another table ( team_id, username)
-	team_stats
-
-#TeamStats
-	sysid
-	team_name
-	total_wins
-	total_losses
-	total_ties
-	team_score # want to associate with player and game
-
-#Game
-	sysid
-	game_date
-
-#Goal
-	sysid
-	player_id
-	game_id
 
 #Player
-	sysis
-	player_id
-	season_cycle
-	player_stats
-	player_position
-	
-Player_Health_Issue
-many-to-many
-player
-issue
+	sysid- primary_key
+	user_id
+	player_stats_id
+	player_position_id
 
 #Positions
-	sysid
+	sysid - primary_key
+	player_id
 	position_type (offense, midfield, defense, goalie)
 
 #Player Stats
-	sysid
-	season_cycle_id
+	sysid - primary_key
 	player_id
 	game_date_id
-	games_played
 	assists
 	offense_dribbling
 	offside calls
 	defensive stops
 	foul_cards
 	goals_saved
-	player_strength
-	player_health_issues 
-	player_fitness (low, medium, high)
+	player_strength_id
+
+#Player_Strength
+	sysid- primary_key
+	player_id
+	player_health_issue_id
+	player_fitness_id
 	player_experience (years playing soccer)
 	player_age
 
-#Registration_Form
-	sysid
-	enable = Boolean
-	season_cycle
-	registration_fee_resident
-	registration_fee_nonresident
-	registration_start_date
-	registration_end_date
-	team_leader_option = Boolean
-	health_issue (Initial thought: list with number rankings)
+#Fitness
+	sysid- primary_key
+	level (low, medium, high)
 
+#Player_Health_Issue (many-to-many)
+	sysid- primary_key 
+	player_id
+	issue_id
+
+#Health_Issue
+	sysid- primary_key
+	issue- (asthma, weak ankles, knee or achilles surgery, 
+	        frequent muscle sprains and strains, back related medical conditions, diabetes)
+
+#Team
+	sysid - primary_key
+	team_season_cycle_id
+	team_leader_id
+	team_name_id
+	team_members_id
+	team_stats_id
+
+#TeamMembers- Connection between Player_Table and Team_Table
+	sysid- primary_key
+	team_id
+	player_id
+
+#TeamStats
+	sysid
+	team_id
+	team_goals
+	#team_results (win, losses, ties) - need to connect to table
+
+#Game
+	sysid
+	game_date
+	team_id
+
+#Goal
+	sysid
+	player_id
+	game_id
+	goals
 
 #Season_Cycle
-	sysid
+	sysid - primary_key
 	cycle_name
 	num_of_teams
 	team_names
 	season_fee_resident
 	season_fee_nonresident
+	registration_start_date
+	registration_end_date
 
 
 	
