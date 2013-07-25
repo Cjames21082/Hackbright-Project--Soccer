@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block context%}
+			
+		
+<form class="form-horizontal" action="/register" method="POST" name="register">
+{{form.hidden_tag()}}
+
+	<legend class=""> Register</legend>
+    {% from "_formhelper.html" import render_field %}			
+	<dl>
+	<!-- Name -->
+	<h3 id="google_label"> New User </h3>
+	{{render_field(form.firstname)}}
+	{{render_field(form.lastname)}}
+
+	<!--DOB & Gender-->
+	<br><br>
+	{{render_field(form.dob)}}
+	{{render_field(form.gender)}}
+
+	<!--LoginInfo-->
+	<h3 id="google_label"> Create Login </h3>
+	{{render_field(form.login.email)}}
+	{{render_field(form.login.password)}}
+
+	<!-- Address -->
+	<h3 id="google_label"> Residence </h3>
+	{{render_field(form.address)}}
+	{{render_field(form.city)}} <br>
+	{{render_field(form.state)}}
+	{{render_field(form.zipcode)}}<br>
+	{{render_field(form.country)}}
+
+	<!-- Soccer Information -->
+	<h3 id="google_label"> Soccer Info </h3>
+	{{render_field(form.fitness)}} 
+	{{render_field(form.experience)}}
+	</dl>
+	<br><br>
+	<h3 id="google_label"> Team Leader? {{form.willing_teamLeader()}}<h3>
+	<!-- Button -->
+	<button class="btn btn-success">Create Account</button>
+</form>
+{% endblock%}

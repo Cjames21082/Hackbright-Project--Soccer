@@ -1,0 +1,23 @@
+{% extends 'base.html'%}
+
+
+{% block context %}
+  
+<form class="form-horizontal" action="/login" method="POST" name="login">
+{{form.hidden_tag()}}
+	<legend class="">Login</legend>
+    {% from "_formhelper.html" import render_field %}
+	<dl>
+		<!-- Email -->
+		<h3 id="google_label">Email </h3>
+		{{ render_field(form.email) }}
+		<!-- Password-->
+		<h3 id="google_label"> Password </h3>
+		{{ render_field(form.password) }}
+	</dl>
+		<!-- Button -->
+		<br><button class="btn btn-success">Login</button>
+</form>
+
+{% endblock %}
+

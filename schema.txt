@@ -59,8 +59,8 @@ Note: copy each game stats for player_health_issue table
 
 #Health_Issue
 	sysid- primary_key
-	issue- (asthma, weak ankles, knee or achilles surgery, 
-	        frequent muscle sprains and strains, back related medical conditions, diabetes)
+	issue- (none-1 asthma-10, weak ankles-2, knee surgery-3, achilles surgery-4, other surgery-5,
+	        frequent muscle sprains-6, back related medical conditions-7, diabetes-8, other-9)
 
 #Team
 	sysid - primary_key

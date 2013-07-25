@@ -1,0 +1,52 @@
+<!-- base template -->
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% if title %}
+    <title>{{title}}</title>
+    {% else %}
+    <title> No Sweat Soccer</title>
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+   
+    <!-- GoogleFont-->
+    <link href='http://fonts.googleapis.com/css?family=Rye' rel='stylesheet' type='text/css'>
+   
+    <style type="text/css">
+      #google_header{
+        font-family: 'Rye', serif;
+        font-size: 30px;
+        text-shadow: 4px 4px 4px #aaa;
+      }
+      #google_label{
+        font-family: 'Rye', serif;
+        font-size: 14px;
+        text-shadow: 4px 4px 4px #aaa;
+        text-align: left
+      }
+    </style>
+    <!-- End GoogleFont-->
+  </head>
+
+  <body>
+    <h3 id="google_header">No Sweat Soccer</h3>
+
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
+    <li class="active"><a href="/login" data-toggle="tab">Login</a></li>
+    <li class="active"><a href="/register" data-toggle="tab">Create Account</a></li>
+  </ul>
+
+    
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    
+    {%block context %}{%endblock%}
+  </body>
+
+</html>
