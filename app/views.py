@@ -22,7 +22,7 @@ def login():
 @app.route('/register', methods=['GET','POST'])
 def register():
 	form = RegisterForm()
-	if form.validate_on_submit()
+	if form.validate_on_submit():
 	   flash("You are registered")
 	   return redirect('index')
 	return render_template('register.html',
