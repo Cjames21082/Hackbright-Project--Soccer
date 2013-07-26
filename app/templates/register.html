@@ -1,44 +1,87 @@
 {% extends 'base.html' %}
 
 {% block context%}
-			
-		
+				
 <form class="form-horizontal" action="/register" method="POST" name="register">
 {{form.hidden_tag()}}
 
 	<legend class=""> Register</legend>
     {% from "_formhelper.html" import render_field %}			
-	<dl>
-	<!-- Name -->
+	<dl> <!-- begin error check -->
+
+	<!-- Name & DOB-->
 	<h3 id="google_label"> New User </h3>
-	{{render_field(form.firstname)}}
-	{{render_field(form.lastname)}}
-
-	<!--DOB & Gender-->
-	<br><br>
-	{{render_field(form.dob)}}
-	{{render_field(form.gender)}}
-
+	<table>
+		<th>{{form.firstname.description}}</th>
+		<th>{{form.lastname.description}}</th>
+		<th>{{form.dob.description}} </th>
+		<tr>
+			<td>{{render_field(form.firstname)}} </td>
+			<td>{{render_field(form.lastname)}}</td>
+			<td>{{render_field(form.dob)}} </td>
+		</tr>		
+	</table>
+	<br>
+	<!--Gender-->
+	<table>
+		<th class="span2">{{form.gender.description}}</th>
+		{% for subfield in form.gender %}
+		<th class="span2">{{render_field(subfield.label)}}{{subfield}}</th>
+		{% endfor %}
+	</table>
+	
 	<!--LoginInfo-->
 	<h3 id="google_label"> Create Login </h3>
-	{{render_field(form.login.email)}}
-	{{render_field(form.login.password)}}
+	<table>
+		<th>{{form.email.description}}</th>
+		<th>{{form.password.description}}</th>
+		<tr>
+			<td>{{render_field(form.email)}}</td>
+			<td>{{render_field(form.password)}}</td>
+		</tr>		
+	</table>
+	
 
 	<!-- Address -->
 	<h3 id="google_label"> Residence </h3>
-	{{render_field(form.address)}}
-	{{render_field(form.city)}} <br>
-	{{render_field(form.state)}}
-	{{render_field(form.zipcode)}}<br>
-	{{render_field(form.country)}}
+	<table>
+		<th>{{form.address.description}}</th>
+		<tr>
+			<td>{{render_field(form.address)}}</td>
+		</tr>		
+	</table>
+	<table>
+		<th>{{form.city.description}}</th>
+		<th>{{form.state.description}}</th>
+		<th>{{form.zipcode.description}} </th>
+		<tr>
+			<td>{{render_field(form.city)}} </td>
+			<td>{{render_field(form.state)}}</td>
+			<td>{{render_field(form.zipcode)}}</td>
+		</tr>		
+	</table>
+	<table>
+		<th>{{form.country.description}}</th>
+		<tr>
+			<td>{{render_field(form.country)}}</td>
+		</tr>		
+	</table>
 
 	<!-- Soccer Information -->
 	<h3 id="google_label"> Soccer Info </h3>
-	{{render_field(form.fitness)}} 
-	{{render_field(form.experience)}}
-	</dl>
+	<table>
+		<th>{{form.fitness.description}}</th>
+		<th>{{form.experience.description}}</th>
+		<tr>
+			<td>{{render_field(form.fitness)}} </td>
+			<td>{{render_field(form.experience)}}</td>
+		</tr>		
+	</table>
+	
+	</dl> <!-- end error check -->
+
 	<br><br>
-	<h3 id="google_label"> Team Leader? {{form.willing_teamLeader()}}<h3>
+	<h3 id="google_label"> Want to be a team leader? {{form.willing_teamLeader()}}<h3>
 	<!-- Button -->
 	<button class="btn btn-success">Create Account</button>
 </form>

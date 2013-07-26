@@ -36,11 +36,17 @@
   <body>
     <h3 id="google_header">No Sweat Soccer</h3>
 
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
-    <li class="active"><a href="/login" data-toggle="tab">Login</a></li>
-    <li class="active"><a href="/register" data-toggle="tab">Create Account</a></li>
-  </ul>
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
+      <li class="active"><a href="/login" data-toggle="tab">Login</a></li>
+      <li class="active"><a href="/register" data-toggle="tab">Create Account</a></li>
+       
+       {% if g.user.is_authenticated() %}
+       li class="active"><a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
+       {% endif %}
+
+    </ul>
 
     
     <script src="http://code.jquery.com/jquery.js"></script>

@@ -1,51 +1,97 @@
-from app import db
+import os
+import psycopg2
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy import ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import sessionmaker, scoped_session
+
+ENGINE = create_engine('postgresql+psycopg2:///hackbright', echo = False)
+session = scoped_session(sessionmaker(bind = ENGINE, autocommit = False, autoflush = False))
 
 ROLE_USER = 0
 ROLE_TEAMLEADER = 1
 ROLE_ADMIN = 2
 
-class User(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	firstname = db.Column(db.String(64))
-	lastname = db.Column(db.String(64))
-	email = db.Column(db.String(120), index=True, unique=True)
-	password = db.Column(db.String(64),index=True, unique=True)
-	address = db.Column(db.String(120))
-	city = db.Column(db.String(64))
-	state = db.Column(db.String(64))
-	zipcode = db.Column(db.String(64))
-	country = db.Column(db.String(64))
-	role = db.Column(db.SmallInteger, default= ROLE_USER)
-	dob = db.Column(db.DateTime(64))
-	gender = db.Column(db.SmallInteger)
-	fitness = db.Column(db.SmallInteger)
-	experience = db.Column(db.Integer)
-	willing_teamLeader = db.Column(db.Boolean, default=False)
+Base = declarative_base()
+Base.query = session.query_property()
 
-	positions = db.relationship('Position', backref = 'player')
-	issues = db.relationship('UserHealth',backref='player')
 
+###   Start class declarations
+
+class User(Base):
+	__tablename__='users'
+	id = Column(Integer, primary_key=True)
+	firstname = Column(String(64))
+	lastname = Column(String(64))
+	email = Column(String(120), index=True, unique=True)
+	password = Column(String(64),index=True, unique=True)
+	address = Column(String(120))
+	city = Column(String(64))
+	state = Column(String(64))
+	zipcode = Column(String(64))
+	country = Column(String(64))
+	role = Column(Integer, default= ROLE_USER)
+	dob = Column(DateTime)
+	gender = Column(String(64))
+	fitness = Column(Integer)
+	experience = Column(Integer)
+	willing_teamLeader = Column(Boolean, default=False)
+
+	positions = relationship('Position', backref = 'player')
+	issues = relationship('UserHealth',backref='player')
+
+	def is_authenticated(self):
+		return True
+
+	def is_active(self):
+		return True
+
+	def is_anonymous(self):
+		return False
+
+	def get_id(self):
+		return unicode(self.id)
 
 	def __repr__(self):
 		return '<User %r %r>' %(self.firstname, self.lastname)
 
-class Position(db.Model):
-	id = db.Column(db.Integer, primary_key=True) 
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	positionType = db.Column(db.String(64))
+
+class Position(Base):
+	__tablename__='positions'
+	id = Column(Integer, primary_key=True) 
+	user_id = Column(Integer, ForeignKey('users.id'))
+	positionType = Column(String(64))
 
 	def __repr__(self):
 		return '<Position %r>' %(self.positionType)
 
-class HealthType(db.Model):
-	id = db.Column(db.Integer, primary_key=True) 
-	issue = db.Column(db.String(64))
+class HealthType(Base):
+	__tablename__= 'health_types'
+
+	id = Column(Integer, primary_key=True) 
+	issue = Column(String(64))
+
+	user = relationship('UserHealth',backref='issue_type')
 
 	def __repr__(self):
 		return '<HealthType %r>' %(self.issue)
 
-class UserHealth(db.Model):
-	id = db.Column(db.Integer, primary_key=True) 
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	health_id = db.Column(db.Integer, db.ForeignKey('health_type.id'))
+
+class UserHealth(Base):
+	__tablename__='users_health'
+	id = Column(Integer, primary_key=True) 
+	user_id = Column(Integer, ForeignKey('users.id'))
+	health_id = Column(Integer, ForeignKey('health_types.id'))
+
+###  End class declarations
+
+def main():
+    """In case we need this for something"""
+    pass
+
+if __name__ == "__main__":
+    main()
+
 
