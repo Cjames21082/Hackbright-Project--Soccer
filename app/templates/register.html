@@ -11,31 +11,30 @@
 	<dl>
 	<!-- Name -->
 	<h3 id="google_label"> New User </h3>
-	{{render_field(form.firstname)}}
-	{{render_field(form.lastname)}}
+	<p>First Name: {{render_field(form.firstname)}} Last Name: {{render_field(form.lastname)}}</p>
 
 	<!--DOB & Gender-->
 	<br><br>
-	{{render_field(form.dob)}}
-	{{render_field(form.gender)}}
+	<p>Date of Birth: {{render_field(form.dob)}}</p>
+	<p>Gender: {{render_field(form.gender)}}</p>
 
 	<!--LoginInfo-->
 	<h3 id="google_label"> Create Login </h3>
-	{{render_field(form.login.email)}}
-	{{render_field(form.login.password)}}
+	<p>Email: {{render_field(form.login.email)}}</p>
+	<p>Password: {{render_field(form.login.password)}}</p>
 
 	<!-- Address -->
 	<h3 id="google_label"> Residence </h3>
-	{{render_field(form.address)}}
-	{{render_field(form.city)}} <br>
-	{{render_field(form.state)}}
-	{{render_field(form.zipcode)}}<br>
-	{{render_field(form.country)}}
+	<p>Address: {{render_field(form.address)}}</p>
+	<p>City: {{render_field(form.city)}}</p>
+	<p>State: {{render_field(form.state)}}</p>
+	<p>Zip code: {{render_field(form.zipcode)}}</p>
+	<p>Country: {{render_field(form.country)}}</p>
 
 	<!-- Soccer Information -->
 	<h3 id="google_label"> Soccer Info </h3>
-	{{render_field(form.fitness)}} 
-	{{render_field(form.experience)}}
+	<p>Fitness: {{render_field(form.fitness)}}</p>
+	<p>Experience: {{render_field(form.experience)}}</p>
 	</dl>
 	<br><br>
 	<h3 id="google_label"> Team Leader? {{form.willing_teamLeader()}}<h3>

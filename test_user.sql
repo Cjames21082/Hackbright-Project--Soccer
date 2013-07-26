@@ -1,0 +1,1 @@
+insert into user (firstname, lastname, email, password, address, city, state, zipcode, country, dob, gender, fitness, experience, "willing_teamLeader") values ('Test','User','lol@test.com','lol','address','city','CA','zipcode','country','1987-10-03',1,1,1,1);
