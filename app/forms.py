@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form, validators
-from flask.ext.wtf import TextField, PasswordField, IntegerField, DateField, BooleanField, SelectField, RadioField
+from flask.ext.wtf import TextField, PasswordField, IntegerField, DateField, BooleanField, SelectField, RadioField, SelectMultipleField
 
 
 class LoginForm(Form):
@@ -7,22 +7,41 @@ class LoginForm(Form):
 	password = PasswordField('Password', [validators.Required(), validators.length(min=6, max=25)])
 										  					
 class RegisterForm(Form):
-	firstname = TextField('First Name', [validators.Required()], description=u'First Name')
-	lastname = TextField('Last Name',[validators.Required()], description=u'Last Name')
-	email = TextField('Email',[validators.Email(message= (u'Invalid email address'))], description=u'Email')
-	password = PasswordField('Password', [validators.Required(), validators.length(min=6, max=25)], description=u'Password')
-	address= TextField('Address',[validators.Required()], description=u'Address')
+	firstname = TextField('First Name', [validators.Required()], 
+						  description=u'First Name')
+	lastname = TextField('Last Name',[validators.Required()], 
+						 description=u'Last Name')
+	email = TextField('Email',[validators.Email(message= (u'Invalid email address'))], 
+					  description=u'Email')
+	password = PasswordField('Password', [validators.Required(), 
+							 validators.length(min=6, max=25)], description=u'Password')
+	address= TextField('Address',[validators.Required()], 
+					   description=u'Address')
 	city= TextField('City',[validators.Required()], description=u'City')
-	state = TextField('State', [validators.Required(), validators.length(max=2)], description=u'State')
+	state = TextField('State', [validators.Required(), 
+					  validators.length(max=2)], description=u'State')
 	zipcode = TextField('Zipcode', [validators.Required()], description=u'Zipcode')
 	country = TextField('Country',[validators.Required()], description=u'Country')
-	dob = DateField('DOB', [validators.Required()], format= '%m/%d/%Y', description=u'Date of Birth')
-	gender = RadioField('Gender', [validators.Required()], choices=[('male', 'M'),('female','F')], description=u'Gender')
-	fitness = SelectField('Fitness Level', [validators.Required()], choices=[ ('1', 'low'), ('2', 'medium'), ('3', 'high')], description=u'Fitness Level')
+	dob = DateField('DOB', [validators.Required()], 
+					format= '%m/%d/%Y', description=u'Date of Birth')
+	gender = RadioField('Gender', [validators.Required()], 
+						choices=[('male', 'M'),('female','F')], description=u'Gender')
+	fitness = SelectField('Fitness Level', [validators.Required()], 
+						  choices=[ ('1', 'low'), ('2', 'medium'), ('3', 'high')], 
+						  description=u'Fitness Level')
 	# need to convert value to int
-	experience = SelectField('Years Played?', [validators.Required()], choices=[(str(i),i) for i in range(66)], description=u'Years Played?')
+	experience = SelectField('Years Played?', [validators.Required()], 
+							 choices=[(str(i),i) for i in range(66)], 
+							 description=u'Years Played?')
 	# need to covert value to int
 	willing_teamLeader = BooleanField('Team Leader?')
+
+	positions = SelectMultipleField(u'Positions', [validators.Required()],
+									choices=[('none','none'),('offense', 'offense'), ('defense', 'defense'), 
+											 ('midfield', 'midfield'), ('goalie','goalie')],
+									description=u'Positions')
+
+	#health_issues = SelectMultipleField(u'Health Issues', [validators.Required()]),
 
 
 def length(min=-1, max=-1):

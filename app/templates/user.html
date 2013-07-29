@@ -1,7 +1,37 @@
 {% extends 'base.html' %}
 
 {% block context%}
-                   
-Hello {{user.firstname}}{{user.lastname}}
 
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
+
+<table>
+<tr>
+  <td>{{user.firstname}}</td>
+  <td></td>
+  <td>{{user.lastname}}</td>
+</tr>
+</table>
+
+<br>
+<div class="btn-group">
+  	<button class="btn dropdown-toggle" data-toggle="dropdown">
+   		Players
+    <span class="caret"></span>
+    </button>
+	
+  	<ul class="dropdown-menu">
+  		{%for user in other_users%} 
+        {% if user.firstname != 'Casssandra' %}
+  		<li><a tabindex="-1" href="#">{{user.firstname}}</a></li>
+  		<!-- {%for p in user.positions%}
+			{{p}}
+		{%endfor%}</a></li> -->
+        {% endif %}
+		{%endfor%}
+  	</ul>
+</div>
+
+                   
 {% endblock %}
