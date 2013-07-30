@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block context%}
+
+<h3 id="google_label"> Player Matrix </h3>
+                   
+<table class="table" border= "1">
+<th> Player</th> 
+
+<th>
+  <select>
+	  <option value="1" selected="selected"> Positions: All</option>
+	  <option value="2">Positions: Offense</option>
+	  <option value="3">Positions: Midfield</option>
+	  <option value="4">Positions: Defense </option>
+	</select>
+</th>
+
+<th>
+  <form action="/team_assign">
+  <select name="fitness">
+	  <option value="1" selected="selected"> Fitness: All</option>
+	  <option value="2">Fitness: Low</option>
+	  <option value="3">Fitness: Medium</option>
+	  <option value="4">Fitness: High </option>
+	</select>
+  </form>
+</th>
+
+<th> 
+	<select>
+	  <option value="0" selected="selected">Health Issues: All</option>
+		{% for type in health_issues %}
+	  <option value="{{type.id}}"> Health Issue: {{type.issue}}</option>
+	 	{% endfor %}
+	</select>
+</th> 
+
+
+<th> Team Leader Option </th>
+
+{% for player in users %}
+<tr>
+	<td>{{player.fullname}}</td>
+	
+	<td>{{player.list_positions()}}</td>
+	
+	{% if player.fitness == 1 %}
+	<td> low </td>
+	{% elif player.fitness == 2 %}
+	<td> medium </td>
+	{% elif player.fitness == 3 %}
+	<td> high </td>
+	{% endif %}
+	
+	<td>{{", ".join(player.health_types)}}</td>
+
+	{% if player.willing_teamLeader == True %}
+	<td> Yes </td>
+	{% else %}
+	<td> No </td>
+	{% endif %}
+
+{% endfor %}
+
+</table>
+
+
+{% endblock %}
+

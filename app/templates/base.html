@@ -136,11 +136,13 @@
        {% if g.user.is_authenticated() %}
        <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
        <li class="active"><a href="/user" data-toggle="tab">Profile</a></li>
+       <li class="active"><a href="/team_assign" data-toggle="tab">Create Teams</a></li>
        <li class="active"><a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
        {% else %}
        <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
        <li class="active"><a href="/login" data-toggle="tab">Login</a></li>
        <li class="active"><a href="/register" data-toggle="tab">Create Account</a></li>
+
        {% endif %}
 
     </ul>

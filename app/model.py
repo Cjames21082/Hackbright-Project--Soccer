@@ -48,6 +48,16 @@ class User(Base):
 
 	# creates a one to many relationship and vice versa
 	positions = relationship('Position', backref=backref('user', lazy='joined'))
+
+	def list_positions(self):
+		positions=[]
+
+		for position in self.positions:
+			positions.append(position.position_type)
+
+		return ",".join(positions)
+
+
 	
 	#creates the relationship to HealthType thru 
 	# a many to many view

@@ -85,9 +85,9 @@ def register():
 
 			model.session.commit()
 
-			new_user= model.session.query(model.User).filter_by(email = form.email.data).first()
+			# new_user= model.session.query(model.User).filter_by(email = form.email.data).first()
 
-			#new_user.positions.append(Position(position_type= form.data.positions))
+			# #new_user.positions.append(Position(position_type= form.data.positions))
 
 			flash("You are registered") 
 	   		#user must login with new email/password
@@ -100,6 +100,26 @@ def register():
 								title='Register',
 								form=form)
 
+@app.route('/team_assign', methods=['GET','POST'])
+@login_required
+def make_teams():
+
+	users = model.session.query(model.User).all()
+	health_issues = model.session.query(model.HealthType).all()
+
+	# # FItness Display
+	# if request.method == "POST":
+ #        fitness = request.form[int("fitness")]
+	
+
+
+
+	return render_template('team_assign.html', 
+							title= 'Create Teams',
+							users=users,
+							health_issues= health_issues)
+
+
 @app.route('/user')
 @login_required
 def user():
@@ -107,8 +127,11 @@ def user():
 	user = current_user
 
 	other_users= model.session.query(model.User).all()
-	print other_users
+	#print other_users
 
 	
-	return render_template('user.html',user=user, other_users=other_users)
+	return render_template('user.html',
+							title= 'Profile',
+							user=user, 
+							other_users=other_users)
 	
