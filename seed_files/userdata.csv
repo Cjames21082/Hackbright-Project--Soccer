@@ -1,0 +1,13 @@
+id,firstname,lastname,email,password ,address,city,state,zipcode,country,role,dob,gender,fitness,experience,willing_teamLeaader
+1,Cassandra,Dixon,cjames@email.com,password1,2 Moneta Court,San Francisco,CA,94112,USA,1,02/10/1982,female,3,15,
+2,Albert,Dixon,albert@email.com,password2,66 Merced Ave,San Francisco,CA,94127,USA,0,04/24/1982,male,1,2,
+3,Crystal ,James,crystal@email.com,password3,42 Lily Street,Trenton,NJ,10068,USA,0,01/01/1983,female,2,16,
+4,Isiah ,James,zay@email.com,password4,1008 2nd Street,New York,NY,10011,USA,0,03/28/1986,male,3,4,
+5,Courtney,James,coconut@email.com,password5,400 Emerson Street,Palo Alto,CA,90061,USA,0,03/15/1960,female,1,6,
+6,Missy,Jones,missy@email.com,password6,86 Riverside Ave,Menlo Park,CA,94885,USA,0,06/21/1973,female,2,7,
+7,Amy,Lam,amylam@email.com,password7,600 Beckon Lane,Memphis,TN,31289,USA,0,07/15/1978,female,2,3,
+8,Becca,Brugmann,becca@email.com,password8,206 W. 112th Street,Los Angeles,CA,93200,USA,0,09/10/1972,female,3,17,
+9,Katherine,Fellows,katherine@email.com,password9,1010 Sutter Street,San Francisco,CA,94188,USA,0,10/12/1984,female,3,20,
+10,Morgan,Freeman,morgan@email.com,password10,233 Haight Ave,San Francisco,CA,91123,USA,0,11/25/1965,female,1,25,
+11,Kate,Odell,kate@email.com,password11,200 University Street,Palo Alto,CA,96332,USA,0,12/12/1969,female,2,3,
+12,Bryan,Berry,bryan@email.com,password12,344 Junipero Court,Carson,NV,41885,USA,0,11/05/1977,male,2,2,

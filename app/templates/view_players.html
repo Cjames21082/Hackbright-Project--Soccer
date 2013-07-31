@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block context%}
+
+<h3 id="google_label"> Player Matrix </h3>
+   
+<form action="view_players" method="GET">               
+
+<input type="submit" value="Submit"> <br><br>
+
+<table class="table" border= "1">
+<th> Player</th> 
+
+<th>
+  <select name= "position">
+	  <option value="all" selected="selected"> Positions: All</option>
+	  <option value="none">Positions: Beginner</option>
+	  <option value="offense">Positions: Offense</option>
+	  <option value="midfield">Positions: Midfield</option>
+	  <option value="defense">Positions: Defense </option>
+	  <option value="goalie">Positions: Goalie </option>
+	</select>
+</th>
+
+<th>
+  <select name="fitness">
+	  <option value="0" selected="selected"> Fitness: All</option>
+	  <option value="1">Fitness: Low</option>
+	  <option value="2">Fitness: Medium</option>
+	  <option value="3">Fitness: High </option>
+	</select>
+  </form>
+</th>
+
+<th> 
+	<select name= "health">
+	  <option value="all" selected="selected">Health Issues: All</option>
+		{% for type in health_issues %}
+	  <option value="{{type.issue}}"> Health Issue: {{type.issue}}</option>
+	 	{% endfor %}
+	</select>
+</th> 
+
+
+<th> Team Leader Option </th>
+
+{% for player in users %}
+<tr>
+	<td>{{player.fullname}}</td>
+
+	<!-- Show positions as a string -->
+	<td>{{", ".join(player.show_positions())}}</td>
+	
+	{% if player.fitness == 1 %}
+	<td> low </td>
+	{% elif player.fitness == 2 %}
+	<td> medium </td>
+	{% elif player.fitness == 3 %}
+	<td> high </td>
+	{% endif %}
+	
+	<td>{{", ".join(player.health_types)}}</td>
+
+	{% if player.willing_teamLeader == True %}
+	<td> Yes </td>
+	{% else %}
+	<td> No </td>
+	{% endif %}
+
+{% endfor %}
+
+</table>
+</form>
+
+{% endblock %}
+

@@ -1,0 +1,8 @@
+Out of sync primary key:
+Step 1: Find out max(id) in table
+		SELECT max(id) from table;
+Step 2: See what the next value is
+		SELECT nextval('your_table_id_seq');
+		EX: SELECT nextval('users_id_seq')
+Step 3: Set the next value
+		SELECT setval('your_table_id_seq', [max(id)-1];

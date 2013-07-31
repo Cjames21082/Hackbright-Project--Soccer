@@ -15,8 +15,15 @@
 		<h3 id="google_label"> Password </h3>
 		{{ render_field(form.password) }}
 	</dl>
+
+		{% for message in get_flashed_messages() %}
+   		 <div>{{ message }}</div>
+  		{% endfor %}
+  		
 		<!-- Button -->
 		<br><button class="btn btn-success">Login</button>
+		
+		
 </form>
 
 {% endblock %}
