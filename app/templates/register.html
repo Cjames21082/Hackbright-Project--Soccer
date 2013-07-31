@@ -18,7 +18,7 @@
 		<tr>
 			<td>{{render_field(form.firstname)}} </td>
 			<td>{{render_field(form.lastname)}}</td>
-			<td>{{render_field(form.dob)}} </td>
+			<td>{{render_field(form.dob)}} (mm/dd/yyyy)</td>
 		</tr>		
 	</table>
 	<br>
@@ -76,10 +76,30 @@
 		<tr>
 			<td>{{render_field(form.fitness)}} </td>
 			<td>{{render_field(form.experience)}}</td>
-	
 		</tr>		
 	</table>
+
+	<br><br>
 	
+	<table>
+		<th>{{form.positions.description}} (Hold Ctrl for multiple selections)</th>
+	
+		<tr>
+			<td>{{render_field(form.positions)}}</td>
+		</tr>		
+	</table>
+
+	<br><br>
+
+	<table>
+		<th>{{form.health.description}} (Hold Ctrl for multiple selections)</th>
+
+		<tr>
+			<td>{{render_field(form.health)}}</td>
+		</tr>		
+	</table>
+
+
 	</dl> <!-- end error check -->
 
 	<br><br>

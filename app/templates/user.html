@@ -6,13 +6,10 @@
 <div>{{ message }}</div>
 {% endfor %}
 
-<table>
-<tr>
-  <td>{{user.firstname}}</td>
-  <td></td>
-  <td>{{user.lastname}}</td>
-</tr>
-</table>
+{{user.fullname}}
+{{user.role}}
+{{g.user.role}}
+  
 
 <br>
 <div class="btn-group">
@@ -22,12 +19,9 @@
     </button>
 	
   	<ul class="dropdown-menu">
-  		{%for user in other_users%} 
-        {% if user.firstname != 'Casssandra' %}
-  		<li><a tabindex="-1" href="#">{{user.firstname}}</a></li>
-  		<!-- {%for p in user.positions%}
-			{{p}}
-		{%endfor%}</a></li> -->
+  		{%for o in other_users%} 
+        {% if o.fullname != user.fullname %}
+  		<li><a tabindex="-1" href="#">{{o.fullname}}</a></li>
         {% endif %}
 		{%endfor%}
   	</ul>

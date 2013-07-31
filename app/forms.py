@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form, validators
 from flask.ext.wtf import TextField, PasswordField, IntegerField, DateField, BooleanField, SelectField, RadioField, SelectMultipleField
-
+import model
 
 class LoginForm(Form):
 	email = TextField('Email',[validators.Email(message= (u'Invalid email address'))])
@@ -29,20 +29,22 @@ class RegisterForm(Form):
 	fitness = SelectField('Fitness Level', [validators.Required()], 
 						  choices=[ ('1', 'low'), ('2', 'medium'), ('3', 'high')], 
 						  description=u'Fitness Level')
-	# need to convert value to int
+	# need to convert fitness value to int
 	experience = SelectField('Years Played?', [validators.Required()], 
 							 choices=[(str(i),i) for i in range(66)], 
 							 description=u'Years Played?')
-	# need to covert value to int
+	# need to covert experience value to int
 	willing_teamLeader = BooleanField('Team Leader?')
 
-	positions = SelectMultipleField(u'Positions', [validators.Required()],
-									choices=[('none','none'),('offense', 'offense'), ('defense', 'defense'), 
+	positions = SelectMultipleField(u'Positions', 
+									choices=[('offense', 'offense'), ('defense', 'defense'), 
 											 ('midfield', 'midfield'), ('goalie','goalie')],
 									description=u'Positions')
 
-	#health_issues = SelectMultipleField(u'Health Issues', [validators.Required()]),
-
+	health = SelectMultipleField(u'Health Issues', [validators.Required()], 
+									choices=[(str(i.id), i.issue) for i in model.session.query(model.HealthType).\
+																	order_by(model.HealthType.id).all()],
+									description=u'Health Issues')
 
 def length(min=-1, max=-1):
     message = 'Must be between %d and %d characters long.' % (min, max)

@@ -62,62 +62,60 @@ def logout():
 def register():
 	form = RegisterForm()
 
-	if form.validate_on_submit():
-		# check if email already exists
-		email_exists = model.session.query(model.User).filter_by(email = form.email.data).first()
-		
-		if email_exists == None:
-			
-			user = model.session.add(model.User(firstname= form.firstname.data,
-												lastname= form.lastname.data,
-												email= form.email.data,
-												password= form.password.data,
-												address= form.address.data,
-												city= form.city.data,
-												state= form.state.data,
-												zipcode= form.zipcode.data,
-												country= form.country.data,
-												dob= form.dob.data,
-												gender= form.gender.data,
-												fitness=int(form.fitness.data),
-												experience= int(form.experience.data),
-												willing_teamLeader=form.willing_teamLeader.data))
-
-			model.session.commit()
-
-			# new_user= model.session.query(model.User).filter_by(email = form.email.data).first()
-
-			# #new_user.positions.append(Position(position_type= form.data.positions))
-
-			flash("You are registered") 
-	   		#user must login with new email/password
-			return redirect('login')
-		else:
-			flash('Email already exists')
-
-	else:
+	if request.method =="GET":
 		return render_template('register.html',
-								title='Register',
-								form=form)
+							title='Register',
+							form=form)
 
-@app.route('/team_assign', methods=['GET','POST'])
-@login_required
-def make_teams():
+	if request.method =="POST":
+		if form.validate_on_submit():
+		# check if email already exists
+			email_exists = model.session.query(model.User).filter_by(email = form.email.data).first()
+		
+			if email_exists == None:
+				
+				user = model.session.\
+					   add(model.User(firstname= form.firstname.data,
+									  lastname= form.lastname.data,
+									  email= form.email.data,
+									  password= form.password.data,
+									  address= form.address.data,
+									  city= form.city.data,
+									  state= form.state.data,
+									  zipcode= form.zipcode.data,
+									  country= form.country.data,
+									  dob= form.dob.data,
+									  gender= form.gender.data,
+									  fitness=int(form.fitness.data),
+									  experience= int(form.experience.data),
+									  willing_teamLeader=form.willing_teamLeader.data))
+			    # add user
+				model.session.commit()
 
-	users = model.session.query(model.User).all()
-	health_issues = model.session.query(model.HealthType).all()
+				user = model.session.query(model.User).filter_by(email = form.email.data).first()
+				user_id = user.id
 
-	# # FItness Display
-	# if request.method == "POST":
- #        fitness = request.form[int("fitness")]
-	
+				# Add positions
+				if form.positions.data == []:
+					model.session.add(model.Position(user_id= user_id, position_type= 'none'))
+				else:
+					for value in form.positions.data:
+						model.session.add(model.Position(user_id= user_id, position_type= value))
+				# print form.health.data	
 
+				# Add health_issues	
+				for value in form.health.data:
+					model.session.add(model.UserHealth(user_id=user_id, health_id=int(value)))
 
-
-	return render_template('team_assign.html', 
-							title= 'Create Teams',
-							users=users,
-							health_issues= health_issues)
+				model.session.commit()
+				
+				flash("You are registered")
+		   		#user must login with new email/password
+				return redirect('login')
+				
+			else:
+				flash('Email already exists')
+				return redirect('register')
 
 
 @app.route('/user')
@@ -134,4 +132,74 @@ def user():
 							title= 'Profile',
 							user=user, 
 							other_users=other_users)
+
+@app.route('/view_players', methods=['GET'])
+@login_required
+def view_players():
+
+	# Start list with all users
+	users = model.session.query(model.User).all()
+
+	filter_once = []
+	filter_twice= []
+	filter_thrice= []
 	
+	# All healthtypes for dropdwon menu healthtypes
+	health_issues = model.session.query(model.HealthType).\
+					order_by(model.HealthType.id).all()
+
+	#get filter variables
+	position = request.args.get("position")
+	print position
+	fitness = request.args.get("fitness")
+	print fitness
+	health = request.args.get("health")
+	print health
+
+	### Begin Filter
+	if position != "all":
+		for user in users:
+			if position in user.show_positions():
+				filter_once.append(user)
+
+		users = filter_once  # redefine list of users
+
+		# print "positions:"
+		# print users
+	
+
+	if fitness != "0":
+		for user in users:
+			if user.fitness == int(fitness):
+				filter_twice.append(user)
+
+		users = filter_twice # redefine list of users
+	
+		# print "fitness:"
+		# print users
+
+	if health != "all":
+		for user in users:
+			if health in user.health_types:
+				filter_thrice.append(user)
+			
+		users = filter_thrice # redefine list of users
+	
+		# print "health:"
+		# print users
+
+	## End Filters
+
+
+	# Note: This query only works if all three filters are not "all" or 0
+	# users = model.session.query(model.Users).\
+	# 		join(model.Positions, model.User.id == model.Position.user_id).\
+	# 		join(model.UserHealth, model.User.id == model.UserHealth.user_id).\
+	# 		filter(model.Position.position_type == position).\
+	# 		filter(model.UserHealth.health_id == int(health)).\
+	# 		filter(model.User.fitness == int(fitness)).all()
+		
+	return render_template('view_players.html', 
+					title='Create Teams',
+					users=users,
+					health_issues=health_issues)

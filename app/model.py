@@ -49,13 +49,14 @@ class User(Base):
 	# creates a one to many relationship and vice versa
 	positions = relationship('Position', backref=backref('user', lazy='joined'))
 
-	def list_positions(self):
-		positions=[]
+	# function to return a iterable list of positions
+	def show_positions(self):
+		position_list=[]
 
-		for position in self.positions:
-			positions.append(position.position_type)
+		for p in self.positions:
+			position_list.append(p.position_type)
 
-		return ",".join(positions)
+		return position_list
 
 
 	
