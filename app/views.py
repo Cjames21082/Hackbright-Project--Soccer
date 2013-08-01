@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, flash, session, url_for, request, g
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, SeasonCycleForm
 from app import app
 import model
 
@@ -117,12 +117,41 @@ def register():
 				flash('Email already exists')
 				return redirect('register')
 
+@app.route('/seasoncycle', methods=['GET','POST'])
+@login_required
+def create_season():
+	
+
+	form =SeasonCycleForm()
+
+	if request.method =="GET":
+		return render_template('seasoncycle.html',
+						title='SeasonCycle',
+						form=form)
+
+	if request.method =="POST":
+		if form.validate_on_submit():
+
+			cycle = model.session.\
+					add(SeasonCycle(admin_id= current_user.id,
+									leaguename= form.data.leaguename,
+									cyclename= form.data.cyclename,
+									num_of_teams= form.data.num_of_teams,
+									home_region= form.data.home_region,
+									fee_resident= form.data.fee_resident,
+									fee_nonresident= form.data.fee_nonresident,
+									reg_start= form.data.reg_start,
+									reg_end= form.data.reg_end))
+			session.commit()
+
+		flash("Cycle creted")
+		return redirect('seasoncycle.html')
+
 
 @app.route('/user')
 @login_required
 def user():
 
-	user = current_user
 
 	other_users= model.session.query(model.User).all()
 	#print other_users
@@ -130,7 +159,7 @@ def user():
 	
 	return render_template('user.html',
 							title= 'Profile',
-							user=user, 
+							user=current_user, 
 							other_users=other_users)
 
 @app.route('/view_players', methods=['GET'])
