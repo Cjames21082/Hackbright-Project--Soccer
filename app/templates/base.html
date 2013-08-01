@@ -1,0 +1,178 @@
+<!-- base template -->
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% if title %}
+    <title>{{title}}</title>
+    {% else %}
+    <title> No Sweat Soccer</title>
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+   
+    <!-- GoogleFont-->
+    <link href='http://fonts.googleapis.com/css?family=Rye' rel='stylesheet' type='text/css'>
+
+    <style type="text/css">
+      #google_header{
+        font-family: 'Rye', serif;
+        font-size: 30px;
+        text-shadow: 4px 4px 4px #aaa;
+      }
+      #google_label{
+        font-family: 'Rye', serif;
+        font-size: 14px;
+        text-shadow: 4px 4px 4px #aaa;
+        text-align: left
+      }
+    </style>
+    <!-- End GoogleFont-->
+   
+
+   <!--Dropdown Menu Scripts -->
+    <script type='text/javascript'
+    src='http://code.jquery.com/jquery-1.7.1.js'></script>
+    <link rel="stylesheet" type="text/css"
+          href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+
+    <script>
+            /* bootstrap-dropdown.js v2.0.2
+ 
+             * http://twitter.github.com/bootstrap/javascript.html#dropdowns
+             * ============================================================
+             * Copyright 2012 Twitter, Inc.
+             *
+             * Licensed under the Apache License, Version 2.0 (the "License");
+             * you may not use this file except in compliance with the License.
+             * You may obtain a copy of the License at
+             *
+             * http://www.apache.org/licenses/LICENSE-2.0
+             *
+             * Unless required by applicable law or agreed to in writing, software
+             * distributed under the License is distributed on an "AS IS" BASIS,
+             * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+             * See the License for the specific language governing permissions and
+             * limitations under the License.
+           */
+     !function( $ ){
+       "use strict"
+      /* DROPDOWN CLASS DEFINITION
+             * ========================= */
+            var toggle = '[data-toggle="dropdown"]'
+            , Dropdown = function ( element ) {
+                var $el = $(element).on('click.dropdown.data-api', this.toggle)
+                $('html').on('click.dropdown.data-api', function () {
+                    $el.parent().removeClass('open')
+                })
+            }
+            Dropdown.prototype = {
+                constructor: Dropdown
+                , toggle: function ( e ) {
+                    var $this = $(this)
+                    , selector = $this.attr('data-target')
+                    , $parent
+                    , isActive
+ 
+                    if (!selector) {
+                        selector = $this.attr('href')
+                        selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
+                    }
+ 
+                    $parent = $(selector)
+                    $parent.length || ($parent = $this.parent())
+                    isActive = $parent.hasClass('open')
+                    clearMenus()
+                        !isActive && $parent.toggleClass('open')
+                    return false
+                }
+            }
+ 
+            function clearMenus() {
+                $(toggle).parent().removeClass('open')
+            }
+            /* DROPDOWN PLUGIN DEFINITION
+             * ========================== */
+            $.fn.dropdown = function ( option ) {
+                return this.each(function () {
+                    var $this = $(this)
+                    , data = $this.data('dropdown')
+                    if (!data) $this.data('dropdown', (data = new Dropdown(this)))
+                    if (typeof option == 'string') data[option].call($this)
+                })
+            }
+            $.fn.dropdown.Constructor = Dropdown
+            /* APPLY TO STANDARD DROPDOWN ELEMENTS
+             * =================================== */
+            $(function () {
+                $('html').on('click.dropdown.data-api', clearMenus)
+                $('body').on('click.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+            })
+        }( window.jQuery );
+        </script>
+         
+        <script type='text/javascript'>//<![CDATA[
+        $(window).load(function(){
+            jQuery('.submenu').hover(function () {
+                jQuery(this).children('ul').removeClass('submenu-hide').addClass('submenu-show');
+            }, function () {
+                jQuery(this).children('ul').removeClass('.submenu-show').addClass('submenu-hide');
+            }).find("a:first").append(" &raquo; ");
+        });//]]>
+        </script>
+    <!-- End of Dropdown Menu-->
+
+  </head>
+
+  <body>
+    <h3 id="google_header">No Sweat Soccer</h3>
+
+
+    <ul class="nav nav-tabs">
+      
+       {% if g.user.is_authenticated() %}
+            {% if g.user.role == 2 %}
+       <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
+       <li class="active"><a href="/user" data-toggle="tab">Profile</a></li>
+       <li class="active"><a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
+       
+        <li>
+        <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+            Admin Tools <span class="caret"></span>
+            </button>
+    
+            <ul class="dropdown-menu">
+                <li><a tabindex="-1" href="/view_players">View Players</a></li>
+                <li><a tabindex="-1" href="/seasoncycle">Season Cycles</a></li>
+                <li><a tabindex="-1" href="#"></a></li>
+            </ul>
+         </li>
+        </div>
+
+            {% else %}         
+
+       <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
+       <li class="active"><a href="/user" data-toggle="tab">Profile</a></li>
+       <li class="active"><a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
+            {% endif %}
+
+       {% else %}
+       <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
+       <li class="active"><a href="/login" data-toggle="tab">Login</a></li>
+       <li class="active"><a href="/register" data-toggle="tab">Create Account</a></li>
+
+       {% endif %}
+
+    </ul>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    {%block context %}{%endblock%}
+  </body>
+
+</html>

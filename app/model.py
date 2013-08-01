@@ -3,7 +3,7 @@ import psycopg2
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import ForeignKey, Table, Column
-from sqlalchemy import Integer, String, DateTime, Boolean
+from sqlalchemy import Integer, String, DateTime, Boolean, Float
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -121,6 +121,21 @@ class UserHealth(Base):
 # 	Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
 # 	Column('health_id', Integer, ForeignKey('health_types.id'), primary_key= True)
 # )
+
+
+
+class SeasonCycle(Base):
+	__tablename__='season_cycles'
+	id = Column(Integer, primary_key=True)
+	admin_id = Column(Integer, ForeignKey('users.id'))
+	leaguename = Column(String(64))
+	cyclename = Column(String(64))
+	num_of_teams= Column(Integer)
+	home_region = Column(String(64))
+	fee_reseident = Column(Float)
+	fee_nonresident = Column(Float, default= 0.00)
+	reg_start = Column(DateTime)
+	reg_end = Column(DateTime)
 
 ###  End class declarations
 	

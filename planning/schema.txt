@@ -6,8 +6,8 @@ USER_PLAYER
 USER_TEAMLEADER
 USER_ADMIN
 
-#User
-	sysid - primary_key
+#User (DONE)
+	id - primary_key
 	first_name - required
 	last_name - required
 	email - required
@@ -24,13 +24,13 @@ USER_ADMIN
 	experience (yrs playing)
 	willing_to_be_team_leader
 
-#Positions
-	sysid - primary_key
-	user_id
+#Positions (DONE)
+	id - primary_key
+	user_id - foreign_key
 	position_type (offense, midfield, defense, goalie)
 
 #Player Stats
-	sysid - primary_key
+	id - primary_key
 	user_id
 	game_id
 	goals
@@ -52,18 +52,20 @@ Player_Health_per_game
 	health_issue_id
 Note: copy each game stats for player_health_issue table
 	
-#Player_Health_Issue (one-to-many)
-	sysid- primary_key 
-	user_id
-	issue_id
+#Player_Health_Issue (DONE)
+	id- primary_key 
+	user_id -foreign_key
+	health_id - foreign_key
 
-#Health_Issue
-	sysid- primary_key
-	issue- (none-1 asthma-10, weak ankles-2, knee surgery-3, achilles surgery-4, other surgery-5,
-	        frequent muscle sprains-6, back related medical conditions-7, diabetes-8, other-9)
+#Health_Issue (DONE)
+	id- primary_key
+	issue- (none-1 asthma-10, weak ankles-2, knee surgery-3, 
+			achilles surgery-4, other surgery-5,
+	        frequent muscle sprains-6, back related medical conditions-7, 
+	        diabetes-8, other-9)
 
 #Team
-	sysid - primary_key
+	id - primary_key
 	season_cycle_id
 	team_leader_id - fk to user_table (user_id)
 	team_name
@@ -73,13 +75,13 @@ Note: copy each game stats for player_health_issue table
 	team_goals
 
 #TeamMembers- Connection between Player_Table and Team_Table
-	sysid- primary_key
+	id- primary_key
 	team_id
 	user_id
 	season_cycle_id
 	
 #Game
-	sysid- pk
+	id- pk
 	game_date
 	home_team_id
 	away_team_id
@@ -88,7 +90,7 @@ Note: copy each game stats for player_health_issue table
 
 Note :Admin Tool
 #Season_Cycle
-	sysid - primary_key
+	id - primary_key
 	admin_userid
 	league_name
 	cycle_name
@@ -110,23 +112,23 @@ Deleted Tables
 
 Note: This table disappears
 #Player
-	sysid- primary_key
+	id- primary_key
 	user_id
 	player_stats_id
 	player_position_id	
 
 Note: set as global variables instead of a table
 #Role 
-	sysid- primary_key
+	id- primary_key
 	role_name (admin, team_leader, player)
 
 
 Note: This table disappears on User table
 #Fitness
-	sysid- primary_key
+	id- primary_key
 	level (low, medium, high)
 
 #TeamStats
-	sysid
+	id
 	team_id
 	team_goals
