@@ -18,12 +18,13 @@
     <link href='http://fonts.googleapis.com/css?family=Rye' rel='stylesheet' type='text/css'>
 
     <style type="text/css">
-      #google_header{
+      .google_header{
         font-family: 'Rye', serif;
         font-size: 30px;
         text-shadow: 4px 4px 4px #aaa;
       }
-      #google_label{
+      
+      .google_label{
         font-family: 'Rye', serif;
         font-size: 14px;
         text-shadow: 4px 4px 4px #aaa;
@@ -33,7 +34,20 @@
     <!-- End GoogleFont-->
    
 
-   <!--Dropdown Menu Scripts -->
+  </head>
+
+  <body>
+    <h3 class="google_header">No Sweat Soccer</h3>
+
+
+    <ul class="nav nav-tabs">
+      {% include 'links.html' %}
+
+    </ul>
+
+    
+
+    <!--Dropdown Menu Scripts -->
     <script type='text/javascript'
     src='http://code.jquery.com/jquery-1.7.1.js'></script>
     <link rel="stylesheet" type="text/css"
@@ -124,50 +138,6 @@
         });//]]>
         </script>
     <!-- End of Dropdown Menu-->
-
-  </head>
-
-  <body>
-    <h3 id="google_header">No Sweat Soccer</h3>
-
-
-    <ul class="nav nav-tabs">
-      
-       {% if g.user.is_authenticated() %}
-            {% if g.user.role == 2 %}
-       <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
-       <li class="active"><a href="/user" data-toggle="tab">Profile</a></li>
-       <li class="active"><a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
-       
-        <li>
-        <div class="btn-group">
-            <button class="btn dropdown-toggle" data-toggle="dropdown">
-            Admin Tools <span class="caret"></span>
-            </button>
-    
-            <ul class="dropdown-menu">
-                <li><a tabindex="-1" href="/view_players">View Players</a></li>
-                <li><a tabindex="-1" href="/seasoncycle">Season Cycles</a></li>
-                <li><a tabindex="-1" href="#"></a></li>
-            </ul>
-         </li>
-        </div>
-
-            {% else %}         
-
-       <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
-       <li class="active"><a href="/user" data-toggle="tab">Profile</a></li>
-       <li class="active"><a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
-            {% endif %}
-
-       {% else %}
-       <li class="active"><a href="/index" data-toggle="tab">Home</a></li>
-       <li class="active"><a href="/login" data-toggle="tab">Login</a></li>
-       <li class="active"><a href="/register" data-toggle="tab">Create Account</a></li>
-
-       {% endif %}
-
-    </ul>
 
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>

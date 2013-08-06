@@ -2,7 +2,7 @@
 
 {% block context%}
 				
-<form class="form-horizontal" action="/register" method="POST" name="register">
+<form class="form-horizontal" action="/register" method="POST" name= "register">
 {{form.hidden_tag()}}
 
 	<legend class=""> Register</legend>
@@ -10,28 +10,33 @@
 	<dl> <!-- begin error check -->
 
 	<!-- Name & DOB-->
-	<h3 id="google_label"> New User </h3>
+	<h3 class="google_label"> New User </h3>
 	<table>
 		<th>{{form.firstname.description}}</th>
 		<th>{{form.lastname.description}}</th>
 		<th>{{form.dob.description}} </th>
+		
 		<tr>
 			<td>{{render_field(form.firstname)}} </td>
 			<td>{{render_field(form.lastname)}}</td>
 			<td>{{render_field(form.dob)}}</td>
-		</tr>		
-	</table>
-	<br>
+		</tr>	
+
 	<!--Gender-->
-	<table>
-		<th class="span2">{{form.gender.description}}</th>
-		{% for subfield in form.gender %}
-		<th class="span2">{{render_field(subfield.label)}}{{subfield}}</th>
-		{% endfor %}
+		<tr><th>{{form.gender.description}}</th></tr>
+			
+		<tr>
+			<td></td>
+			{% for subfield in form.gender %}	
+			<td>{{subfield.label}}{{render_field(subfield)}}</td>
+			{% endfor %}
+		</tr>
+		
+	
 	</table>
 	
 	<!--LoginInfo-->
-	<h3 id="google_label"> Create Login </h3>
+	<h3 class="google_label"> Create Login </h3>
 	<table>
 		<th>{{form.email.description}}</th>
 		<th>{{form.password.description}}</th>
@@ -43,7 +48,7 @@
 	
 
 	<!-- Address -->
-	<h3 id="google_label"> Residence </h3>
+	<h3 class="google_label"> Residence </h3>
 	<table>
 		<th>{{form.address.description}}</th>
 		<tr>
@@ -68,7 +73,7 @@
 	</table>
 
 	<!-- Soccer Information -->
-	<h3 id="google_label"> Soccer Info </h3>
+	<h3 class="google_label"> Soccer Info </h3>
 	<table>
 		<th>{{form.fitness.description}}</th>
 		<th>{{form.experience.description}}</th>
@@ -103,8 +108,9 @@
 	</dl> <!-- end error check -->
 
 	<br><br>
-	<h3 id="google_label"> Want to be a team leader? {{form.willing_teamLeader()}}<h3>
+	<h3 class="google_label"> Want to be a team leader? {{form.willing_teamLeader()}}<h3>
 	<!-- Button -->
 	<button class="btn btn-success">Create Account</button>
+
 </form>
 {% endblock%}

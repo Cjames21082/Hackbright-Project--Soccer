@@ -64,7 +64,7 @@ Note: copy each game stats for player_health_issue table
 	        frequent muscle sprains-6, back related medical conditions-7, 
 	        diabetes-8, other-9)
 
-#Team
+#Team (DONE)
 	id - primary_key
 	season_cycle_id
 	team_leader_id - fk to user_table (user_id)
@@ -74,11 +74,10 @@ Note: copy each game stats for player_health_issue table
 	ties
 	team_goals
 
-#TeamMembers- Connection between Player_Table and Team_Table
+#TeamMembers- Connection between Player_Table and Team_Table (DONE)
 	id- primary_key
 	team_id
 	user_id
-	season_cycle_id
 	
 #Game
 	id- pk
@@ -89,7 +88,7 @@ Note: copy each game stats for player_health_issue table
 	away_score
 
 Note :Admin Tool
-#Season_Cycle
+#Season_Cycle (Done)
 	id - primary_key
 	admin_userid
 	league_name
@@ -104,6 +103,17 @@ Note :Admin Tool
 Notes: timestamp - create/ update on each table
        soft delete - deleted (Boolean)
 
+===============================================
+Elo Algorithm
+===============================================
+import math;
+class elo_core:
+  def getExpectation(rating_1, rating_2):
+    calc = (1.0 / (1.0 + pow(10, ((rating_2 - rating_1) / 400))));
+    return calc;
+  def modifyRating(rating, expected, actual, kfactor):
+    calc = (rating + kfactor * (actual - expected));
+    return calc;
 
 ================================================
 Deleted Tables

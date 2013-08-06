@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form, validators
-from flask.ext.wtf import FloatField, TextField, PasswordField, IntegerField, DateField, BooleanField, SelectField, RadioField, SelectMultipleField
+from flask.ext.wtf import TextAreaField, FloatField, TextField, PasswordField, IntegerField, DateField, BooleanField, SelectField, RadioField, SelectMultipleField
 import model
 
 class LoginForm(Form):
@@ -16,7 +16,7 @@ class RegisterForm(Form):
 	email = TextField('Email',[validators.Email(message= (u'Invalid email address'))], 
 					  description=u'Email')
 	password = PasswordField('Password', [validators.Required(), 
-							 validators.length(min=6, max=25)], description=u'Password')
+							 validators.length(min=6, max=25)])
 	address= TextField('Address',[validators.Required()], 
 					   description=u'Address')
 	city= TextField('City',[validators.Required()], description=u'City')
@@ -58,14 +58,35 @@ class SeasonCycleForm(Form):
 	cyclename = TextField('Cycle Name', [validators.Required(), 
 						   validators.length(min=6, max=25)],
 						   description=u'Season Cycle Description')
-	num_of_teams = IntegerField('Number Of Teams', [validators.Required()])
-	home_region = TextField('League Name', [validators.Required()])
-	fee_resident = FloatField('Resident Fee', [validators.Required()])
-	fee_nonresident = FloatField('Resident Fee', [validators.Optional()]) 
+	num_of_teams = IntegerField('Number Of Teams', [validators.Required()],
+								description=u'Max # Teams')
+	home_region = TextField('League Name', [validators.Required()],
+							description=u'Home Region')
+	fee_resident = FloatField('Resident Fee', [validators.Required()],
+							  description=u'Resident Fee')
+	fee_nonresident = FloatField('Resident Fee', [validators.Optional()],
+								  description=u'Nonresident Fee (Optional)') 
 	reg_start = DateField('Registration Starts', [validators.Required(message=(u'start date: mm/dd/yyyy'))], 
 						   format= '%m/%d/%Y', description=u'Registration Starts (mm/dd/yyyy)')
 	reg_end = DateField('Registration Ends', [validators.Required(message= (u'end date: mm/dd/yyyy'))], 
 						 format= '%m/%d/%Y', description=u'Registration Ends (mm/dd/yyyy)')
+
+class EditProfileForm(Form):
+	firstname = TextField('First Name', [validators.Optional()], 
+						  description=u'First Name')
+	lastname = TextField('Last Name',[validators.Optional()], 
+						 description=u'Last Name')
+	address= TextField('Address',[validators.Optional()], 
+					   description=u'Address')
+	city= TextField('City',[validators.Optional()], description=u'City')
+	state = TextField('State', [validators.length(max=2), 
+								validators.Optional()], description=u'State')
+	zipcode = TextField('Zipcode', [validators.Optional()], description=u'Zipcode')
+	country = TextField('Country',[validators.Optional()], description=u'Country')
+	user_disabled= BooleanField('Taking a break? Disable Account')
+	about_me= TextAreaField('About Me', [validators.length(min=0, max=140)],
+						description=u'About Me!!')
+	# Add health and fitness?
 
 ########## End Forms
 

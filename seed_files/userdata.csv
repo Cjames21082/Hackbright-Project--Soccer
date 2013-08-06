@@ -1,5 +1,5 @@
 id,firstname,lastname,email,password ,address,city,state,zipcode,country,role,dob,gender,fitness,experience,willing_teamLeaader
-1,Cassandra,Dixon,cjames@email.com,password1,2 Moneta Court,San Francisco,CA,94112,USA,1,02/10/1982,female,3,15,
+1,Cassandra,Dixon,cjames@email.com,password1,2 Moneta Court,San Francisco,CA,94112,USA,2,02/10/1982,female,3,15,
 2,Albert,Dixon,albert@email.com,password2,66 Merced Ave,San Francisco,CA,94127,USA,0,04/24/1982,male,1,2,
 3,Crystal ,James,crystal@email.com,password3,42 Lily Street,Trenton,NJ,10068,USA,0,01/01/1983,female,2,16,
 4,Isiah ,James,zay@email.com,password4,1008 2nd Street,New York,NY,10011,USA,0,03/28/1986,male,3,4,

@@ -3,16 +3,138 @@
 
 {% block context %}
 
-<h3 id="google_label"> New User </h3>
-<table>
-	<th> Create New Season </th> 
+
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
 
 
+<div class="span7">
+<form action="/seasons" method="POST" name="cycles">
+	{{form.hidden_tag()}}
+	<table>
+		{% from "_formhelper.html" import render_field %}
+		<dl> <!--Begin erron checking -->
+		<tr><th class="google_label"> Create New Cycle </th></tr>
 
+		<tr>
+			<th>{{form.leaguename.description}}</th>
+			<th>{{form.cyclename.description}}</th>
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.leaguename)}} </td>
+			<td>{{render_field(form.cyclename)}}</td>
+		</tr>
 
+		<tr>
+			<th>{{form.home_region.description}}</th>
+			<th>{{form.num_of_teams.description}}</th>  
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.home_region)}} </td>
+			<td>{{render_field(form.num_of_teams)}}</td>
+		</tr>
 
+		<tr>
+			<th>{{form.fee_resident.description}}</th> 
+			<th>{{form.fee_nonresident.description}}</th>
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.fee_resident)}}</td>
+			<td>{{render_field(form.fee_nonresident)}}</td>
+		</tr>	
 
-</table>
+		<tr>
+			<th>{{form.reg_start.description}}</th>
+			<th>{{form.reg_end.description}}</th> 
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.reg_start)}} </td>
+			<td>{{render_field(form.reg_end)}}</td>
+		</tr>	
+		</dl> <!-- end error checking-->
+	</table>
+
+	<button class="btn btn-success">Create Cycle</button>
+</form>
+</div>
+
+<br>
+
+<div class="span5">
+	<form action="/seasons" method="GET" name="allcycles">
+	<table>
+		<tr>
+			<th class="google_label"> History: Season Cycles </th>
+		</tr>
+
+		<tr>
+            <td>
+        		<select name= "cycle_history">
+        			{% for cycle in all_cycles%}
+				  <option value="{{cycle.id}}"> {{cycle.cyclename}}</option>
+				  	{% endfor %}
+				</select>
+       		</td>
+       		<td><button class="btn btn-success">See Details</button><td>
+		</tr>
+	</table>
+
+	<table border="1">
+		{% if past_cycle: %}
+		<tr>
+			<th> League Name </th>
+			<th> Cycle Name</th>
+		</tr>
+
+		<tr>
+			<td> {{past_cycle.leaguename}}</td>
+			<td> {{past_cycle.cyclename}} </td>
+		</tr>
+
+		<tr></tr>
+
+		<tr>
+			<th> Max # Teams </th>
+			<th> Home Region</th>
+		</tr>
+
+		<tr>
+			<td> {{past_cycle.num_of_teams}}</td>
+			<td> {{past_cycle.home_region}} </td>
+		</tr>
+
+		<tr></tr>
+
+		<tr>
+			<th> Resident Fee </th>
+			<th> Nonresident Fee </th>
+		</tr>
+
+		<tr>
+			<td> {{past_cycle.fee_resident}} </td>
+			<td> {{past_cycle.fee_nonresident}} </td>
+		</tr>
+
+		<tr></tr>
+
+		<tr>
+			<th> Registration Start Date </th>
+			<th> Registration End Date </th>
+		</tr>
+
+		<tr>
+			<td> {{past_cycle.reg_start}}</td>
+			<td> {{past_cycle.reg_end}} </td>
+		</tr>
+		{% endif %}
+	</table>
+	</form>
+</div>
 
 
 {% endblock %}

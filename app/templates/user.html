@@ -6,26 +6,49 @@
 <div>{{ message }}</div>
 {% endfor %}
 
-{{user.fullname}}
-{{user.role}}
-{{g.user.role}}
+{{user.role}}{{g.user.role}}
+    <table>
+      <tr valign="top">
+        <td><img src = {{user.avatar(100)}}></td>
+        <td><h1 class="google_label"> {{user.fullname}}</h1></td>
+        <td>
+          {% if user.about_me %}<p>{{user.about_me}}</p>{% endif %}
+          
+          {% if user.last_seen %}
+             <p><i> Last seen on: {{user.last_seen}} </i></p>
+          {% endif %}
+          
+        <td></td>
+        <td>
+          <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+              Teammates<span class="caret"></span>
+            </button>
+          
+            <ul class="dropdown-menu">
+              {%for o in other_users%} 
+                {% if o.fullname != user.fullname %}
+              <li><a tabindex="-1" href="#">{{o.fullname}}</a></li>
+                {% endif %}
+              {%endfor%}
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+
+
   
 
-<br>
-<div class="btn-group">
-  	<button class="btn dropdown-toggle" data-toggle="dropdown">
-   		Players
-    <span class="caret"></span>
-    </button>
-	
-  	<ul class="dropdown-menu">
-  		{%for o in other_users%} 
-        {% if o.fullname != user.fullname %}
-  		<li><a tabindex="-1" href="#">{{o.fullname}}</a></li>
-        {% endif %}
-		{%endfor%}
-  	</ul>
-</div>
+
+  <br><br>
+
+  <hr>
+
+  {% for post in posts %}
+    {% include 'posts.html'%}
+  {% endfor %}
 
                    
 {% endblock %}

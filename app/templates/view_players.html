@@ -2,11 +2,11 @@
 
 {% block context%}
 
-<h3 id="google_label"> Player Matrix </h3>
+<h3 class="google_label"> Player Matrix </h3>
    
-<form action="view_players" method="GET">               
+<form action="/view_players" method="GET">               
 
-<input type="submit" value="Submit"> <br><br>
+<button class="btn btn-success">View Players</button> <br><br>
 
 <table class="table" border= "1">
 <th> Player</th> 
@@ -34,9 +34,9 @@
 
 <th> 
 	<select name= "health">
-	  <option value="all" selected="selected">Health Issues: All</option>
+	  <option value="0" selected="selected">Health Issues: All</option>
 		{% for type in health_issues %}
-	  <option value="{{type.issue}}"> Health Issue: {{type.issue}}</option>
+	  <option value="{{type.id}}"> Health Issue: {{type.issue}}</option>
 	 	{% endfor %}
 	</select>
 </th> 
@@ -59,7 +59,7 @@
 	<td> high </td>
 	{% endif %}
 	
-	<td>{{", ".join(player.health_types)}}</td>
+	<td>{{", ".join(player.health)}}</td>
 
 	{% if player.willing_teamLeader == True %}
 	<td> Yes </td>

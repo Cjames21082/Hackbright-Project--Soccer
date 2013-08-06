@@ -1,10 +1,11 @@
-from flask import Flask
+#Note: the init file would try to run the app when an upgrade was initiated
+#	   one solution was to move these details to another file server.py
 
-#create Flask obj
-app = Flask(__name__)
+# from flask import Flask
 
-app.config.from_object('config')
+# app = Flask(__name__)
+# app.config.from_object('config')
 
 
-from app import views, model
+# from app import views
 

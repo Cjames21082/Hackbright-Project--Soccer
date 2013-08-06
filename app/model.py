@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
+from hashlib import md5
 
 
 # Connection
@@ -33,7 +34,7 @@ class User(Base):
 	firstname = Column(String(64))
 	lastname = Column(String(64))
 	email = Column(String(120), index=True, unique=True)
-	password = Column(String(64),index=True, unique=True)
+	password = Column(String(64),index=True)
 	address = Column(String(120))
 	city = Column(String(64))
 	state = Column(String(64))
@@ -41,25 +42,17 @@ class User(Base):
 	country = Column(String(64))
 	role = Column(Integer, default= ROLE_USER)
 	dob = Column(DateTime)
-	gender = Column(String(64))
-	fitness = Column(Integer)
-	experience = Column(Integer)
+	gender = Column(String(64), index=True)
+	fitness = Column(Integer, index=True)
+	experience = Column(Integer, index=True)
 	willing_teamLeader = Column(Boolean, default=False)
+	user_disabled= Column(Boolean, default=False)
+	about_me= Column(String(140))
+	last_seen= Column(DateTime)
 
 	# creates a one to many relationship and vice versa
 	positions = relationship('Position', backref=backref('user', lazy='joined'))
 
-	# function to return a iterable list of positions
-	def show_positions(self):
-		position_list=[]
-
-		for p in self.positions:
-			position_list.append(p.position_type)
-
-		return position_list
-
-
-	
 	#creates the relationship to HealthType thru 
 	# a many to many view
 	health_issues = relationship('HealthType',
@@ -68,7 +61,9 @@ class User(Base):
 
 	# proxy the 'issue' attribute from the 'health_issues' relationship
 	# to view health issues joined by the UserHealth table
-	health_types = association_proxy('health_issues','issue')
+	health = association_proxy('health_issues','issue')
+
+
 
 	@hybrid_property
     	def fullname(self):
@@ -90,16 +85,28 @@ class User(Base):
 	def __repr__(self):
 		return '<User %r>' %(self.fullname)
 
+	# function to return a iterable list of positions
+	def show_positions(self):
+		position_list=[]
 
-class Position(Base):
-	#many to one table
-	__tablename__='positions'
-	id = Column(Integer, primary_key=True) 
-	user_id = Column(Integer, ForeignKey('users.id'))
-	position_type = Column(String(64))
+		for p in self.positions:
+			position_list.append(p.position_type)
 
-	def __repr__(self):
-		return '<Position %r>' %(self.position_type)
+		return position_list
+
+	def update_role(self, new_role):
+		self.role = new_role
+
+	def undo_role(self):
+		self.role = ROLE_USER
+
+	# this is a user related task, thus goes in User class
+	# https://en.gravatar.com/site/implement/images
+	def avatar(self, size):
+		return ('http://www.gravatar.com/avatar/' + 
+				 md5(self.email).hexdigest() +
+				'?d=identicon&s=' + str(size)
+				)
 
 class HealthType(Base):
 	# one to many
@@ -109,22 +116,21 @@ class HealthType(Base):
 
 	def __repr__(self):
 		return '<HealthType %r>' %(self.issue)
-	
-class UserHealth(Base):
-	__tablename__='users_health'
+
+
+class Position(Base):
+	#many to one table
+	__tablename__='positions'
 	id = Column(Integer, primary_key=True) 
 	user_id = Column(Integer, ForeignKey('users.id'))
-	health_id = Column(Integer, ForeignKey('health_types.id'))
-	
-# #many to many - VIEW
-# health_table = Table('users_health', Base.metadata,
-# 	Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
-# 	Column('health_id', Integer, ForeignKey('health_types.id'), primary_key= True)
-# )
+	position_type = Column(String(64), index= True)
 
+	def __repr__(self):
+		return '<Position %r>' %(self.position_type)
 
 
 class SeasonCycle(Base):
+	#one to one table
 	__tablename__='season_cycles'
 	id = Column(Integer, primary_key=True)
 	admin_id = Column(Integer, ForeignKey('users.id'))
@@ -132,13 +138,50 @@ class SeasonCycle(Base):
 	cyclename = Column(String(64))
 	num_of_teams= Column(Integer)
 	home_region = Column(String(64))
-	fee_reseident = Column(Float)
+	fee_resident= Column(Float)
 	fee_nonresident = Column(Float, default= 0.00)
 	reg_start = Column(DateTime)
 	reg_end = Column(DateTime)
 
-###  End class declarations
+class UserHealth(Base):
+	#many to many table
+	__tablename__='users_health'
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey('users.id'))
+	health_id = Column(Integer, ForeignKey('health_types.id'))
+
+class Team(Base):
+	# one to many table
+	__tablename__= 'teams'
+	id = Column(Integer, primary_key=True)
+	seasoncycle= Column(Integer, ForeignKey('season_cycles.id'))
+	team_leader = Column(Integer, ForeignKey('users.id'))
+	teamname= Column(String(64))
+	team_wins= Column(Integer)
+	team_ties= Column(Integer)
+	team_losses= Column(Integer)
+	team_goals= Column(Integer)
+
+	def __repr__(self):
+		return '<Team %r>' %(self.teamname)
+
+class TeamMember(Base):
+	# many to many table
+	__tablename__= 'team_members'
+	id = Column(Integer, primary_key=True)
+	team_id= Column(Integer, ForeignKey('teams.id'))
+	player_id = Column(Integer, ForeignKey('users.id'))
+	seasoncycle= Column(Integer, ForeignKey('season_cycles.id'))
 	
+	
+# #many to many - VIEW
+# health_table = Table('users_health', Base.metadata,
+# 	Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
+# 	Column('health_id', Integer, ForeignKey('health_types.id'), primary_key= True)
+# )
+
+###  End class declarations
+
 
 def main():
     """In case we need this for something"""

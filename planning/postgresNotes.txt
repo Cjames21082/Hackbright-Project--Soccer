@@ -6,3 +6,9 @@ Step 2: See what the next value is
 		EX: SELECT nextval('users_id_seq')
 Step 3: Set the next value
 		SELECT setval('your_table_id_seq', [max(id)-1];
+
+
+Uploading csv Files:
+
+copy zip_codes from '/path/to/csv/ZIP_CODES.txt' CSV;
+

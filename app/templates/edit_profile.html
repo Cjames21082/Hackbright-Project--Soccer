@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block context %}
+
+{% for message in get_flashed_messages() %}
+   		 <div>{{ message }}</div>
+  		{% endfor %}
+
+<form action="/edit" method="POST" name="edit">
+	{{form.hidden_tag()}}
+
+	<legend class=""> Edit Profile</legend>
+	{% from "_formhelper.html" import render_field %}
+	<dl> <!-- begin error check -->
+
+	<tr><h3 class="google_label"> Tell us about yourself! </h3>
+	<table>
+		<tr>
+			<th>{{form.about_me.description}}</th>
+		</tr>
+		
+		<tr>
+			<td>{{render_field(form.about_me)}} </td>
+		</tr>	
+	</table>
+
+	<h3 class="google_label"> Name changed? </h3>
+	<table>
+		<tr>
+			<th>{{form.firstname.description}}</th>
+			<th>{{form.lastname.description}}</th>
+		</tr>
+		
+		<tr>
+			<td>{{render_field(form.firstname)}} </td>
+			<td>{{render_field(form.lastname)}}</td>
+		</tr>	
+	</table>
+
+	<h3 class="google_label"> Changed residence? </h3>
+	<table>
+		<tr><th>{{form.address.description}}</th></tr>
+		<tr>
+			<td>{{render_field(form.address)}}</td>
+		</tr>		
+	
+		<tr>
+			<th>{{form.city.description}}</th>
+			<th>{{form.state.description}}</th>
+			<th>{{form.zipcode.description}} </th>
+		</tr>
+		<tr>
+			<td>{{render_field(form.city)}} </td>
+			<td>{{render_field(form.state)}}</td>
+			<td>{{render_field(form.zipcode)}}</td>
+		</tr>		
+	
+		<tr><th>{{form.country.description}}</th></tr>
+		<tr>
+			<td>{{render_field(form.country)}}</td>
+		</tr>		
+	</table>
+
+	<h3 class="google_label"> Taking a break? </h3>
+	<table>
+		<tr>
+			<td>{{render_field(form.user_disabled)}} </td>
+		</tr>	
+	</table>
+
+	</dl> <!-- end error check -->
+	<button class="btn btn-success">Submit Changes</button>
+</form>
+
+
+{% endblock %}
