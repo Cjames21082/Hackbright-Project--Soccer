@@ -2,12 +2,35 @@ from flask.ext.wtf import Form, validators
 from flask.ext.wtf import TextAreaField, FloatField, TextField, PasswordField, IntegerField, DateField, BooleanField, SelectField, RadioField, SelectMultipleField
 import model
 
+class EditProfileForm(Form):
+	firstname = TextField('First Name', [validators.Optional()], 
+						  description=u'First Name')
+	lastname = TextField('Last Name',[validators.Optional()], 
+						 description=u'Last Name')
+	address= TextField('Address',[validators.Optional()], 
+					   description=u'Address')
+	city= TextField('City',[validators.Optional()], description=u'City')
+	state = TextField('State', [validators.length(max=2), 
+								validators.Optional()], description=u'State')
+	zipcode = TextField('Zipcode', [validators.Optional()], description=u'Zipcode')
+	country = TextField('Country',[validators.Optional()], description=u'Country')
+	user_disabled= BooleanField('Taking a break? Disable Account')
+	about_me= TextAreaField('About Me', [validators.length(min=0, max=140)],
+						description=u'About Me!!')
+
 class LoginForm(Form):
 	email = TextField('Email',
 		              [validators.Email(message= (u'Invalid email address'))])
 	password = PasswordField('Password', [validators.Required(), 
 							 validators.length(min=6, max=25)])
+
+
+class PostForm(Form):
+    post = TextAreaField('Post', [validators.Required(), 
+    				  validators.length(min=0, max=140)],
+    				  description=u'Wanna say something?!')
 										  					
+
 class RegisterForm(Form):
 	firstname = TextField('First Name', [validators.Required()], 
 						  description=u'First Name')
@@ -16,7 +39,8 @@ class RegisterForm(Form):
 	email = TextField('Email',[validators.Email(message= (u'Invalid email address'))], 
 					  description=u'Email')
 	password = PasswordField('Password', [validators.Required(), 
-							 validators.length(min=6, max=25)])
+							 validators.length(min=6, max=25)],
+							 description=u'Password')
 	address= TextField('Address',[validators.Required()], 
 					   description=u'Address')
 	city= TextField('City',[validators.Required()], description=u'City')
@@ -28,28 +52,30 @@ class RegisterForm(Form):
 					format= '%m/%d/%Y', description=u'Date of Birth (mm/dd/yyyy)')
 	gender = RadioField('Gender', [validators.Required()], 
 						choices=[('male', 'M'),('female','F')], description=u'Gender')
+	
+
+class RegisterContForm(Form):
 	fitness = SelectField('Fitness Level', [validators.Required()], 
 						  choices=[ ('1', 'low'), ('2', 'medium'), ('3', 'high')], 
 						  description=u'Fitness Level')
 	# need to convert fitness value to int
 	
 	experience = SelectField('Years Played?', [validators.Required()], 
-							 choices=[(str(i),i) for i in range(66)], 
+							 choices=[(str(i),i) for i in range(50)], 
 							 description=u'Years Played?')
 	# need to covert experience value to int
 	
 	willing_teamLeader = BooleanField('Team Leader?')
-
+	
 	positions = SelectMultipleField(u'Positions', 
 									choices=[('offense', 'offense'), ('defense', 'defense'), 
 											 ('midfield', 'midfield'), ('goalie','goalie')],
 									description=u'Positions (Optional)')
 
-	health = SelectMultipleField(u'Health Issues', [validators.Required()], 
+	health = SelectMultipleField(u'Health Issues', [validators.Required()],
 									choices=[(str(i.id), i.issue) for i in model.session.query(model.HealthType).\
 																	order_by(model.HealthType.id).all()],
 									description=u'Health Issues')
-
 
 
 class SeasonCycleForm(Form):
@@ -71,22 +97,21 @@ class SeasonCycleForm(Form):
 	reg_end = DateField('Registration Ends', [validators.Required(message= (u'end date: mm/dd/yyyy'))], 
 						 format= '%m/%d/%Y', description=u'Registration Ends (mm/dd/yyyy)')
 
-class EditProfileForm(Form):
-	firstname = TextField('First Name', [validators.Optional()], 
-						  description=u'First Name')
-	lastname = TextField('Last Name',[validators.Optional()], 
-						 description=u'Last Name')
-	address= TextField('Address',[validators.Optional()], 
-					   description=u'Address')
-	city= TextField('City',[validators.Optional()], description=u'City')
-	state = TextField('State', [validators.length(max=2), 
-								validators.Optional()], description=u'State')
-	zipcode = TextField('Zipcode', [validators.Optional()], description=u'Zipcode')
-	country = TextField('Country',[validators.Optional()], description=u'Country')
-	user_disabled= BooleanField('Taking a break? Disable Account')
-	about_me= TextAreaField('About Me', [validators.length(min=0, max=140)],
-						description=u'About Me!!')
-	# Add health and fitness?
+class TeamCreateForm(Form):
+	cycle = model.session.query(model.SeasonCycle).order_by(model.SeasonCycle.id.desc()).first()
+	teams = model.session.query(model.Team).join(model.SeasonCycle, model.Team.seasoncycle == cycle.id).all()
+	
+	team_num = SelectField('Total Teams', [validators.Required()],
+							choices=[(str(i),i) for i in range(len(teams)+1)],
+							description=u'Select Total Teams')
+
+    
+
+class TeamForm(Form):
+	teamname = TextField('Teamname', [validators.Optional()],
+						  description=u'Team Name')
+	team_leader = IntegerField('Leader_id')
+
 
 ########## End Forms
 

@@ -29,29 +29,22 @@ USER_ADMIN
 	user_id - foreign_key
 	position_type (offense, midfield, defense, goalie)
 
-#Player Stats
+#Player Stats (DONE)
 	id - primary_key
 	user_id
 	game_id
 	goals
 	assists
-	offense_dribbling
-	offside call
-	defensive stops
-	foul_cards
-	goals_saved
-	user_age
-	user_fitness
-	main_position
+	offense_dribbling -DELETE
+	offside call - DELETE
+	defensive stops - DELETE
+	foul_cards - DELETE
+	goals_saved - DELETE
+	user_age - DELETE
+	user_fitness - DELETE
+	main_position - DELETE
 Note: capture experience, age, health, fitness on stat table
 
-Player_Health_per_game
-	id- pk
-	player_stat_id
-	game_id
-	health_issue_id
-Note: copy each game stats for player_health_issue table
-	
 #Player_Health_Issue (DONE)
 	id- primary_key 
 	user_id -foreign_key
@@ -102,7 +95,6 @@ Note :Admin Tool
 
 Notes: timestamp - create/ update on each table
        soft delete - deleted (Boolean)
-
 ===============================================
 Elo Algorithm
 ===============================================
@@ -118,8 +110,6 @@ class elo_core:
 ================================================
 Deleted Tables
 =================================================
-
-
 Note: This table disappears
 #Player
 	id- primary_key
@@ -142,3 +132,11 @@ Note: This table disappears on User table
 	id
 	team_id
 	team_goals
+
+Note: This table disappears on User table
+#Player_Health_per_game
+	id- pk
+	player_stat_id
+	game_id
+	health_issue_id
+Note: copy each game stats for player_health_issue table

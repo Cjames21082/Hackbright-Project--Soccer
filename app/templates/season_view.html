@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+{% block context %}
+
+
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
+
+<!----------------View Past Cycles ------------>
+<div class="span6">
+	<form action="/seasons_view" method="GET" name="allcycles">
+	
+		{% if past_cycle %}
+		{% include 'season_form.html' %}
+		{% endif %}
+		
+		<!-----Get Detail Button-->
+		<br><br>
+		<table>
+			<tr>
+	            <td>
+	        		<select name= "cycle_history">
+	        			{% for cycle in all_cycles%}
+					  <option value="{{cycle.id}}"> {{cycle.cyclename}}</option>
+					  	{% endfor %}
+					</select>
+	       		</td>
+	       	</tr>
+	       	<tr>
+	       		<td><button class="btn btn-success">See Details</button></td>
+	       	</tr>
+	     </table>
+    </form>
+     
+     <!-- Link to Create and Edit Season -->
+     <br><br>
+     <table>
+       	<tr>
+       	    <td><button class="btn btn-success"><a href='/seasons_create'>Create New Season</a></button></td>
+			<td><button class="btn btn-success"><a href='/seasons_edit'>Edit Active Season</a></button></td>
+		</tr>
+	</table>
+</div>
+
+
+
+{% endblock %}

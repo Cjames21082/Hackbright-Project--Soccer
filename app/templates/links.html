@@ -1,23 +1,24 @@
 <!-- Links on navbar -->
 {% if g.user.is_authenticated() %}
-  {% if g.user.role == 2 %}
   <li class="active">
-    <a href="/index" data-toggle="tab">Home</a></li>
-    <!-- Profile Dropdown Menu -->
+    <a href="/" data-toggle="tab">Home</a></li>
+  
+  <!-- Profile Dropdown Menu -->
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown">
       Profile <span class="caret"></span></a>
 
       <ul class="dropdown-menu">
         <li>
-          <a tabindex="-1" href="{{url_for('user',fullname = g.user.fullname)}}">My Profile</a></li>
+          <a tabindex="-1" href="{{url_for('user')}}">My Profile</a></li>
         <li>
           <a tabindex="-1" href="/edit">Edit Information</a></li> 
         <li>
           <a tabindex="-1" href=""></a></li>
       </ul>
     </li>
-      
+    
+    {% if g.user.role == 2 %}
       <!-- Admin Tools Dropdown Menu -->
     <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown">
@@ -27,46 +28,36 @@
         <li>
           <a tabindex="-1" href="{{url_for('view_players')}}">View Players</a></li>
         <li>
-          <a tabindex="-1" href="/seasons">Season Cycles</a></li>
+          <a tabindex="-1" href="/seasons">Season Management</a></li>
         <li>
-          <a tabindex="-1" href="/assign_role"> Assign Captains </a></li>
+          <a tabindex="-1" href="/teams"> Team Management </a></li>
         <li>
-          <a tabindex="-1" href=""></a></li>
+          <a tabindex="-1" href=""></a> </li>
       </ul>
-
     </li>
+      {% endif %}
 
     <li class="active">
       <a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
+  
+  <!-- User not authenticated -->
+  {% else %}
 
+  <li class="active">
+    <a href="/" data-toggle="tab">Home</a></li>
 
-  {% else %}         
-
-    <li class="active">
-      <a href="/index" data-toggle="tab">Home</a></li>
-      <!-- Profile Dropdown Menu -->
-    <li class="dropdown">
-      <a class="dropdown-toggle" data-toggle="dropdown">
-        Profile <span class="caret"></span></a>
-
-        <ul class="dropdown-menu">
-          <li>
-            <a tabindex="-1" href="{{url_for('user',fullname = g.user.fullname)}}">My Profile</a></li>
-          <li> 
-            <a tabindex="-1" href="/edit">Edit Information</a></li> 
-          <li>
-            <a tabindex="-1" href=""></a></li>
-        </ul>
-      </li>
-     <li class="active">
-      <a href="{{url_for('logout')}}" data-toggle="tab">Logout</a></li>
-  {% endif %}
-
-{% else %}
-<li class="active">
-  <a href="/index" data-toggle="tab">Home</a></li>
-<li class="active">
-  <a href="{{url_for('login')}}" data-toggle="tab">Login</a></li>
-<li class="active">
-  <a href="{{url_for('register')}}" data-toggle="tab">Create Account</a></li>
+  <li class="active">
+    <a href="/login" data-toggle="tab">Login</a></li>
+  <!-- Disable Registration link if not open-->
+ 
+    {% if open_registration == True %}
+     <li>
+    <a href="{{url_for('register')}}" data-toggle="tab">Create Account</a></li>
+    {% endif %}
+    
+    {% if open_registration == False %}
+    <h3 class="google_label"> 
+    Note: Registration closed at this time. </h3>
+    {% endif%}  
+ 
  {% endif %}

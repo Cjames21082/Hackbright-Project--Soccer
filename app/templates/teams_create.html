@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block context%}
+<form action="team_create" method='POST'>
+{{form.hidden_tag()}}
+
+
+<legend class=""> Create Teams</legend>
+    {% from "_formhelper.html" import render_field %}			
+	<dl> <!-- begin error check -->
+
+
+	<table>
+		<th>{{form.team_num.description}}</th>
+		
+		<tr>
+			<td>{{render_field(form.team_num)}} </td>
+		</tr>	
+	</table>
+	</dl>
+
+	<!-- Button -->
+	<button class="btn btn-success">Go!</button>
+
+</form>
+
+{% for team in form.teams %}
+<table border="1" class="span3">
+<thead>
+	<tr>
+      <th>{{team.teamname}}</th>
+    </tr>
+</thead>
+  <tbody>
+
+    	{% for player in team_members %} 
+			{% if player.team_id == team.id%}
+			<tr>	
+				<td>{{player.user.fullname}} </td>
+				<td>{{player.user.getRating()}}</td>
+				<td>{{", ".join(player.user.show_positions())}}</td>
+			<tr>
+			{% endif %}
+		{% endfor %}
+  </tbody>
+<tfoot>
+</tfoot>
+</table>
+{% endfor %}
+<br>
+
+{% endblock %}

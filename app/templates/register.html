@@ -71,44 +71,9 @@
 			<td>{{render_field(form.country)}}</td>
 		</tr>		
 	</table>
-
-	<!-- Soccer Information -->
-	<h3 class="google_label"> Soccer Info </h3>
-	<table>
-		<th>{{form.fitness.description}}</th>
-		<th>{{form.experience.description}}</th>
-
-		<tr>
-			<td>{{render_field(form.fitness)}} </td>
-			<td>{{render_field(form.experience)}}</td>
-		</tr>		
-	</table>
-
-	<br><br>
 	
-	<table>
-		<th>{{form.positions.description}} (Hold Ctrl for multiple selections)</th>
-	
-		<tr>
-			<td>{{render_field(form.positions)}}</td>
-		</tr>		
-	</table>
-
-	<br><br>
-
-	<table>
-		<th>{{form.health.description}} (Hold Ctrl for multiple selections)</th>
-
-		<tr>
-			<td>{{render_field(form.health)}}</td>
-		</tr>		
-	</table>
-
-
 	</dl> <!-- end error check -->
 
-	<br><br>
-	<h3 class="google_label"> Want to be a team leader? {{form.willing_teamLeader()}}<h3>
 	<!-- Button -->
 	<button class="btn btn-success">Create Account</button>
 

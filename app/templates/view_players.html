@@ -42,11 +42,9 @@
 </th> 
 
 
-<th> Team Leader Option </th>
-
 {% for player in users %}
 <tr>
-	<td>{{player.fullname}}</td>
+	<td>{{player.fullname}} : {{player.getRating()}}</td>
 
 	<!-- Show positions as a string -->
 	<td>{{", ".join(player.show_positions())}}</td>
@@ -60,13 +58,6 @@
 	{% endif %}
 	
 	<td>{{", ".join(player.health)}}</td>
-
-	{% if player.willing_teamLeader == True %}
-	<td> Yes </td>
-	{% else %}
-	<td> No </td>
-	{% endif %}
-
 {% endfor %}
 
 </table>

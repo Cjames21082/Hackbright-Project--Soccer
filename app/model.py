@@ -1,14 +1,24 @@
 import os
+# postgres connection
 import psycopg2
+#sqlalchemy properties
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import ForeignKey, Table, Column
-from sqlalchemy import Integer, String, DateTime, Boolean, Float
+from sqlalchemy import Integer, String, DateTime, Boolean, Float, Date
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
+
+# avatar image
 from hashlib import md5
+#matching algorithm
+import eloalgorithm
+# timestamp default
+from datetime import datetime, date
+
+#--------End Imports-----------------#
 
 
 # Connection
@@ -41,18 +51,30 @@ class User(Base):
 	zipcode = Column(String(64))
 	country = Column(String(64))
 	role = Column(Integer, default= ROLE_USER)
-	dob = Column(DateTime)
 	gender = Column(String(64), index=True)
 	fitness = Column(Integer, index=True)
 	experience = Column(Integer, index=True)
+	dob = Column(Date)
 	willing_teamLeader = Column(Boolean, default=False)
-	user_disabled= Column(Boolean, default=False)
 	about_me= Column(String(140))
 	last_seen= Column(DateTime)
+	user_disabled= Column(Boolean, default=False)
+	user_registered=Column(Boolean, index= True, default=False)
+
+	initial_rating = 1400
+
+
+	#--------Relationship to Other Tables--------#
 
 	# creates a one to many relationship and vice versa
 	positions = relationship('Position', backref=backref('user', lazy='joined'))
 
+	posts = relationship('Post', backref=backref('user', lazy='joined'))
+
+	ratings = relationship('PlayerRating', backref=backref('user', lazy='joined'))
+
+	team = relationship('TeamMember', backref=backref('user', lazy='joined'))
+	
 	#creates the relationship to HealthType thru 
 	# a many to many view
 	health_issues = relationship('HealthType',
@@ -64,7 +86,9 @@ class User(Base):
 	health = association_proxy('health_issues','issue')
 
 
+	#--------------End Relationships----------------#
 
+	#-----------User Functions----------------------#
 	@hybrid_property
     	def fullname(self):
         	return self.firstname + " " + self.lastname
@@ -81,7 +105,6 @@ class User(Base):
 	def get_id(self):
 		return unicode(self.id)
 
-
 	def __repr__(self):
 		return '<User %r>' %(self.fullname)
 
@@ -94,11 +117,20 @@ class User(Base):
 
 		return position_list
 
+	def show_posts(self):
+		# This is a query
+		return session.query(Post).\
+			filter(Post.user_id == self.id).\
+			order_by(Post.timestamp.desc())
+
+
+	# admin function to assign roles--#
 	def update_role(self, new_role):
 		self.role = new_role
 
 	def undo_role(self):
 		self.role = ROLE_USER
+	#---End admin functions-----------#
 
 	# this is a user related task, thus goes in User class
 	# https://en.gravatar.com/site/implement/images
@@ -107,15 +139,93 @@ class User(Base):
 				 md5(self.email).hexdigest() +
 				'?d=identicon&s=' + str(size)
 				)
+	#---------Algorithms functions---------------#
+
+	def getRating(self):
+		
+		query= session.query(PlayerRating).\
+					  join(User, User.id == PlayerRating.player_id).\
+					  filter(User.id == self.id).\
+					  order_by(PlayerRating.player_rating.desc()).\
+					  first()
+
+		if query == None:
+			session.add(PlayerRating(player_id =self.id,
+									 player_rating= self.getStrength() + self.initial_rating))
+			session.commit()
+			last = self.getRating()
+		else:
+			last= query.player_rating
+
+		return last
+
+	def getStrength(self):
+	# strength is a calculation of age, fitness, 
+	# likely injury, and years experience
+	# the strength remains constant during a season_cycle
+		
+		fitness = calculate_fitness(self.fitness)
+		experience = calculate_experience(self.experience)
+		
+		health_conversion= 'none'
+		for h in self.health:
+			if h != 'none':
+			  health_conversion = len(self.health_issues)
+			else:
+				break
+		
+		health = calculate_health(health_conversion)
+		
+		return fitness + experience + health
+	
+
+	#------End User Algorithm Functions--------#
+
+
+class Game(Base):
+	__tablename__= "games"
+	id = Column(Integer, primary_key=True) 
+	game_date = Column(DateTime)
+	home_team = Column(Integer, ForeignKey('teams.id'))
+	away_team = Column(Integer, ForeignKey('teams.id'))
+	home_score = Column(Integer)
+	away_score = Column(Integer)
 
 class HealthType(Base):
-	# one to many
+	# one to many table
 	__tablename__= 'health_types'
 	id = Column(Integer, primary_key=True) 
 	issue = Column('issue', String(64))
 
 	def __repr__(self):
 		return '<HealthType %r>' %(self.issue)
+
+
+class PlayerRating(Base):
+	""" Stores the final calculation of a player's rating
+	 by game based on wins/loss/tie. 
+	 Calculated using a percentage amt from team's calculation """
+	 # many to on table
+	__tablename__= "player_ratings"
+	id = Column(Integer, primary_key=True)
+	team_id = Column(Integer, ForeignKey('teams.id'))
+	game_id = Column(Integer, ForeignKey('games.id'))
+	player_id= Column(Integer, ForeignKey('users.id'))
+	player_rating = Column(Integer)
+
+
+class PlayerStat(Base):
+	#many to one table
+	__tablename__ = "player_stats"
+	id = Column(Integer, primary_key=True)
+	game_id = Column(Integer, ForeignKey('games.id'))
+	player_id= Column(Integer, ForeignKey('users.id'))
+	goals = Column(Integer)
+	absence = Column(Boolean, default = False)
+	goalie_win = Column(Boolean, default = False)
+	goalie_loss = Column(Boolean, default = False)
+	assists= Column(Integer)
+	strength= Column(Integer)
 
 
 class Position(Base):
@@ -127,6 +237,18 @@ class Position(Base):
 
 	def __repr__(self):
 		return '<Position %r>' %(self.position_type)
+
+
+class Post(Base):
+	# many to one table
+	__tablename__= 'posts'
+	id= Column(Integer, primary_key=True)
+	body= Column(String(140))
+	timestamp = Column(DateTime, default= datetime.utcnow())
+	user_id = Column(Integer, ForeignKey('users.id'))
+
+	def __repr__(self):
+		return '<Post %r>' %(self.body)
 
 
 class SeasonCycle(Base):
@@ -142,13 +264,8 @@ class SeasonCycle(Base):
 	fee_nonresident = Column(Float, default= 0.00)
 	reg_start = Column(DateTime)
 	reg_end = Column(DateTime)
+	active = Column(Boolean, default=False)
 
-class UserHealth(Base):
-	#many to many table
-	__tablename__='users_health'
-	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey('users.id'))
-	health_id = Column(Integer, ForeignKey('health_types.id'))
 
 class Team(Base):
 	# one to many table
@@ -165,14 +282,45 @@ class Team(Base):
 	def __repr__(self):
 		return '<Team %r>' %(self.teamname)
 
+	
+
+	def getRating(self):
+		
+		last= session.query(TeamRating).\
+					  join(Team, Team.id == TeamRating.team_id).\
+					  filter(Team.id == self.id).\
+					  order_by(TeamRating.team_rating.desc()).\
+					  first()
+
+		return last.team_rating
+
+
 class TeamMember(Base):
+	""" Connects the user(player) to a team"""
 	# many to many table
 	__tablename__= 'team_members'
 	id = Column(Integer, primary_key=True)
 	team_id= Column(Integer, ForeignKey('teams.id'))
 	player_id = Column(Integer, ForeignKey('users.id'))
-	seasoncycle= Column(Integer, ForeignKey('season_cycles.id'))
-	
+
+
+class TeamRating(Base):
+	""" Stores the final calculation of a team's rating
+	 by game based on wins/loss/tie """
+	# many to one table
+	__tablename__= "team_ratings"
+	id = Column(Integer, primary_key=True)
+	team_id = Column(Integer, ForeignKey('teams.id'))
+	game_id = Column(Integer, ForeignKey('games.id'))
+	team_rating = Column(Integer)
+
+
+class UserHealth(Base):
+	#many to many table
+	__tablename__='users_health'
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey('users.id'))
+	health_id = Column(Integer, ForeignKey('health_types.id'))	
 	
 # #many to many - VIEW
 # health_table = Table('users_health', Base.metadata,
@@ -181,6 +329,55 @@ class TeamMember(Base):
 # )
 
 ###  End class declarations
+
+#-----------Determine if registration is active--#
+def registration():
+	registration= None
+	active_registration = session.query(SeasonCycle).\
+				   		  filter(SeasonCycle.active == True).\
+				   		  first()
+
+	if active_registration != None:
+	   	return True
+	else:
+		return False
+
+#---------Functions to calculate Strength---#
+def calculate_age(born):
+    today = date.today()
+    try: 
+        birthday = born.replace(year=today.year)
+    except ValueError: 
+    	print "raised when birth date is February 29", 
+    	print "and the current year is not a leap year"
+       
+        birthday = born.replace(year=today.year, day=born.day-1)
+    
+    if birthday > today:
+        return today.year - born.year - 1
+    else:
+        return today.year - born.year
+
+def calculate_fitness(fitness):
+	if fitness == 3:
+		return 50
+	elif fitness == 2:
+		return 30
+	else:
+		return 20
+
+def calculate_health(health):
+	if health == 'none':
+		return 50
+	else:
+		# health converted to a number of issues
+		return health * (-15)
+
+def calculate_experience(experience):
+	new_experience = max(0, min(experience, 10))
+
+	return new_experience * 10
+
 
 
 def main():

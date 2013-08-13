@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block context %}
+
+
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
+
+<!-----Redirect User to Create, View, and Edit Season-->
+<div class="text-center">
+
+	<br><br><br>
+	
+	<button class="btn btn-success"><a href='/seasons_create'>Create New Season</a></button>
+
+	<button class="btn btn-success"><a href='/seasons_view'>View Season Details</a></button>
+
+	<button class="btn btn-success"><a href='/seasons_edit'>Edit Active Season</a></button>
+
+
+</div>
+
+{% endblock %}

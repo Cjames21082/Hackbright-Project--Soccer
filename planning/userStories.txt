@@ -17,7 +17,7 @@ MILESTONES
 Release Version 1.0
 Database
 Functions:
-  Login Handler
+  Login Handler - done
   Forms: Registration, Season_Cylce Settings
   Matching Algorithm
   Permission Roles= admin, team_leader, player

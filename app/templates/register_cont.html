@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block context%}
+				
+<form class="form-horizontal" action="/register_cont" method="POST" name= "reg_complete">
+{{form.hidden_tag()}}
+
+	<legend class=""> Complete Registration</legend>
+    {% from "_formhelper.html" import render_field %}			
+	<dl> <!-- begin error check -->
+
+		<!-- Soccer Information -->
+	<h3 class="google_label"> Soccer Info </h3>
+	<table>
+		<th>{{form.fitness.description}}</th>
+		<th>{{form.experience.description}}</th>
+
+		<tr>
+			<td>{{render_field(form.fitness)}} </td>
+			<td>{{render_field(form.experience)}}</td>
+		</tr>		
+	</table>
+
+	<br><br>
+
+	<table>
+		<th>{{form.positions.description}} (Hold Ctrl for multiple selections)</th>
+	
+		<tr>
+			<td>{{render_field(form.positions)}}</td>
+		</tr>		
+	</table>
+
+	<br><br>
+
+	<table>
+		<th>{{form.health.description}} (Hold Ctrl for multiple selections)</th>
+
+		<tr>
+			<td>{{render_field(form.health)}}</td>
+		</tr>		
+	</table>
+	</dl> <!-- end error check -->
+
+	<h3 class="google_label"> Want to be a team leader? {{form.willing_teamLeader()}}<h3>
+
+	<!-- Button -->
+	<button class="btn btn-success">Finish Registration</button>
+
+</form>
+{% endblock%}

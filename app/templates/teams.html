@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block context %}
+
+
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
+
+<!---------Redirect User to Team Names, Leaders, Assignment-->
+<div class="text-center">
+
+	<br><br><br>
+
+	<button class="btn btn-success">
+		<h3 class ="google_label"> Step 1: </h3>
+		<a href='/team_names'>Team Names </a>
+	</button>	
+
+	
+	<button class="btn btn-success">
+		<h3 class ="google_label"> Step 2: </h3>
+		<a href='/team_leaders'>Team Leaders</a>
+	</button>
+
+	
+	<button class="btn btn-success">
+		<h3 class ="google_label"> Step 3 </h3>
+		<a href='/team_create'>Team Creation </a>
+	</button>
+
+
+</div>
+
+{% endblock %}

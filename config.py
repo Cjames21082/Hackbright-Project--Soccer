@@ -10,5 +10,7 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir,'db_repository')
 # folder where migrate data files stored
 
 CSRF_ENABLED = True
-SECRET_KEY = 'HAKHFAHFJSBASBDASJDH'
+SECRET_KEY = 'HAKHFAHFJSBASBDASJD'
 
+#pagination
+POSTS_PER_PAGE = 3

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block context%}
+<div>
+<form action='team_names' method='POST' name='add_names'>
+{{form.hidden_tag()}}
+    <table>
+		<tr>
+			<td><th class="google_label"> Team Name </th></td>  
+			<td> {{form.teamname(placeholder='Cool Name Here!!')}}</td>
+			
+			{% if team_count != max_teams%}
+			<td> <button type="submit" class="btn btn-success" >Add Team</button></td>
+			{% endif %}
+
+		</tr>
+	</table>
+</form>
+</div>
+
+<div>
+	<form action='team_names' method='GET' name="team_list">
+	    <table>
+			<tr> 
+				<td><th class="google_label"> {{current_season.cyclename}} : Teams || </th></td>
+				<td><th class="google_label"> Count: {{team_count}} ||</th></td>
+				<td><th class="google_label"> Max # Teams: {{max_teams}} || </th></td>
+			</tr> 
+			
+			{% for team in teams %}
+			<tr> 
+				<td class= "text-center"> {{team.teamname}} </td>
+			</tr>
+			{% endfor %}
+
+		</table>
+	</form>
+</div>
+
+<!-- Links to Team Leaders and Team Creations-->
+<div class="text-center">
+	<button class="btn btn-success">
+		<h3 class ="google_label"> Step 2: </h3>
+		<a href='/team_leaders'>Team Leaders</a>
+	</button>
+
+	
+	<button class="btn btn-success">
+		<h3 class ="google_label"> Step 3 </h3>
+		<a href='/team_create'>Team Creation </a>
+	</button> 
+</div>
+
+
+{% endblock %}

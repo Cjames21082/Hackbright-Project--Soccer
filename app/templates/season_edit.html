@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+{% block context %}
+
+
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
+
+<!----------------Edit Active Cycle ------------>
+<div class="span6">
+	<form action="/seasons_edit" method="POST" name="activecycle">
+	
+	{% include 'season_form.html' %}
+
+	<br>
+		{% if current_cycle.active == True %}
+		<table>
+			<tr>
+				<td><button type="submit" class="btn btn-success" name="current_season" value="edit">Edit Details</button><td>
+			</tr>
+		</table>
+	  	{% endif %}
+	
+	<br>
+		<table>
+			<tr>
+				<td><button type="submit" class="btn btn-success" name="current_season" value="close">Close Registration</button><td>
+			</tr>
+		</table>
+	</form>
+	
+	<!-- Link to Create and View Seasons -->
+	<table>
+       	<tr>
+       	    <td><button class="btn btn-success"><a href='/seasons_create'>Create New Season</a></button></td>
+       	    <td><button class="btn btn-success"><a href='/seasons_view'>View Season Details</a></button></td>
+		</tr>
+	</table>
+
+	<h3 class="google_label"> {{message}} </h3>
+
+</div>
+
+
+{% endblock %}

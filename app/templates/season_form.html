@@ -1,0 +1,47 @@
+{{form.hidden_tag()}}
+	<table>
+		{% from "_formhelper.html" import render_field %}
+		<dl> <!--Begin erron checking -->
+		<tr><th class="google_label"> Season Cycle </th></tr>
+
+		<tr>
+			<th>{{form.leaguename.description}}</th>
+			<th>{{form.cyclename.description}}</th>
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.leaguename)}} </td>
+			<td>{{render_field(form.cyclename)}}</td>
+		</tr>
+
+		<tr>
+			<th>{{form.home_region.description}}</th>
+			<th>{{form.num_of_teams.description}}</th>  
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.home_region)}} </td>
+			<td>{{render_field(form.num_of_teams)}}</td>
+		</tr>
+
+		<tr>
+			<th>{{form.fee_resident.description}}</th> 
+			<th>{{form.fee_nonresident.description}}</th>
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.fee_resident)}}</td>
+			<td>{{render_field(form.fee_nonresident)}}</td>
+		</tr>	
+
+		<tr>
+			<th>{{form.reg_start.description}}</th>
+			<th>{{form.reg_end.description}}</th> 
+		</tr>
+			
+		<tr>
+			<td>{{render_field(form.reg_start)}} </td>
+			<td>{{render_field(form.reg_end)}}</td>
+		</tr>	
+		</dl> <!-- end error checking-->
+	</table>

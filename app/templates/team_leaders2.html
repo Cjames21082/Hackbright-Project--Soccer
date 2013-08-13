@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block context%}
+
+<!-- Captain Table -->
+<table class="span6">
+	<tr>
+		<th>Captains: {{count_captains}}</th>
+	</tr>
+	
+	{% for player in captains %}
+	</tr>
+		<td> {{player.getRating()}}: {{player.fullname}} </td>
+	</tr>
+	{% endfor %}
+</table>
+
+
+
+<!-- Admin Table-->
+<table class="span6">
+	
+	<tr>
+		<th>Admin: {{count_admins}}</th>
+	</tr>
+	
+	{% for player in admins %}
+	</tr>
+		<td> {{player.fullname}}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+
+<!-- Player Table -->
+<table class="table">
+
+	<tr>
+		<th> Registered Player </th>
+		<th> Rating </th>
+		<th> Assign Roles</th>
+		<th>Total Registered: {{count_players}}</th>
+	
+	{% for player in users %}
+		{% if player.willing_teamLeader != True %}
+			</tr>
+				<td> {{player.fullname}}</td>
+
+				<td> Current Rating: {{player.getRating()}} </td>
+
+				<td> 
+				<form action = "" method="POST" name="change_role">
+				<div class="btn-group">
+					<button type="submit" class="btn btn-primary" name="captain" value="{{player.id}}" >Make Captain</button>
+					<button type="submit" class="btn btn-primary" name="admin" value="{{player.id}}">Make Admin</button>
+					<button type="submit" class="btn btn-danger" name="undo" value="{{player.id}}"> Reset Player</button>
+				</div>
+				</form>
+				</td>
+			</tr>
+		{% endif %}
+	{% endfor %}
+</table>
+
+	<p class'google_label'><a href= 'team_leaders'> Go Back </a></p>
+
+{% endblock %}

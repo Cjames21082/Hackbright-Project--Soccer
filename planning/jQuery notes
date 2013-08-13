@@ -1,0 +1,28 @@
+jQuery.on = function (thing, otherthing, callback) {
+	//do something with thing
+	// other things...
+	//get event variable
+	callback(event)
+}
+
+
+jQuery.on(1, 2, function(e) {
+	console.log(e)
+});
+
+
+var goDoThings = function (e) {
+	alert(e)
+}
+
+
+jQuery.on(1, 2, goDoThings)
+
+var jQuery = $ = function() {
+	all the jquery code
+}
+
+
+$('body').on('click', function(event){
+	event.target
+})

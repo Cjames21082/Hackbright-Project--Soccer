@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block context %}
+
+
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
+
+<!---------Create New Cycle---------->
+<div >
+	<form action="/seasons_create" method="POST" name="cycles">
+		
+		{% include 'season_form.html' %}
+		
+		<table>
+			<tr>
+			<button class="btn btn-success">Create Cycle</button></tr>
+		</table>	
+	</form>
+
+<br><br>
+	<!-- Links to View and Edit Cycles-->
+	<table>
+		<tr>
+			<td><button class="btn btn-success"><a href='/seasons_view'>View Season Details</a></button></td>
+			<td><button class="btn btn-success"><a href='/seasons_edit'>Edit Active Season</a></button></td>
+		</tr>
+	</table>
+</div>
+
+{% endblock %}
