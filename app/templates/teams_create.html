@@ -7,6 +7,8 @@
 
 
 <legend class=""> Create Teams</legend>
+
+	<!-- Team Generating Button -->
     {% from "_formhelper.html" import render_field %}			
 	<dl> <!-- begin error check -->
 
@@ -19,17 +21,30 @@
 		</tr>	
 	</table>
 	</dl>
-
+	
+	{% if current_season.saved == False %}
 	<!-- Button -->
-	<button class="btn btn-success">Go!</button>
-
+	<button class="btn btn-success"> Create Magic!</button>
+	{% endif %}
 </form>
+
+{% if current_season.saved == False %}
+<!-- Save Teams; Disable Create Button-->
+<form action="/team_save" method='POST'>
+	<button class="btn btn-success"> Save Teams </button>
+</form>
+{% else %}
+<p class="google_label"> Teams have been saved </p>
+{% endif %}
+
 
 {% for team in form.teams %}
 <table border="1" class="span3">
 <thead>
 	<tr>
       <th>{{team.teamname}}</th>
+      <th>Team Score:</th>
+      <th>{{team.getRating()}}</th>
     </tr>
 </thead>
   <tbody>
@@ -48,6 +63,21 @@
 </tfoot>
 </table>
 {% endfor %}
-<br>
+
+<!-- Links to Main Table -->
+<div align= "center" class="text-center span12">
+
+	<br><br><br>
+
+	<button class="btn btn-success">
+		<h3 class ="google_label"> Step 3: </h3>
+		<a href='/team_leaders'>Team Leaders</a>
+	</button>
+
+	<button class="btn btn-success">
+		<h3 class ="google_label"> Team Management </h3>
+		<a href='/teams'>Main Menu</a>
+	</button>
+</div>
 
 {% endblock %}

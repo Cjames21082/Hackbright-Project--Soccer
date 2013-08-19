@@ -2,19 +2,17 @@
 
 
 {% block context%}
-<style>
 
-img.align-center{
-	display:block;
-	margin: 0px auto;
-}
-img.medium{
-	width: 600px;
-	height:600px;
-}
+<br><br><br>
 
-</style>
+<div class="google_header background" align="center">
+	{%if season %}
+		League: {{season.leaguename}}
+		<br><br><br>
+		Region: {{season.home_region}}
+	{% endif %}
 
-<img src= 'static/img/soccer_logo.jpg' class='align-center medium'>
-
+	<br><br><br>
+	<img src= 'static/img/soccer_logo.jpg' class='center-align medium'>
+</div>
 {% endblock %}

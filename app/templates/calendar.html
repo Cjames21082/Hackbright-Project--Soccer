@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+
+
+{% block context %}
+
+{% for message in get_flashed_messages() %}
+<div>{{ message }}</div>
+{% endfor %}
+	
+<!--Calendar-->	
+<div class="span5">
+	<h1 class="text-center google_header"> 
+	{{current_month}} {{current_yr}}</h1 > 
+
+	<div align="center">
+		<table border= "2" width="30%" height="30%">
+			<thead>
+				<th>Sunday</th>
+				<th>Monday</th>
+				<th>Tuesday</th>
+				<th>Wednesday</th>
+				<th>Thursday</th>
+				<th>Friday</th>
+				<th>Saturday</th>
+			</thead>
+			<tbody>
+				{% for w in each_week %}
+				<tr>
+					{% for day in w %}
+						{% if day == 0 %}
+						<td></td>
+						{% else %}
+						<td>{{day}}</td>
+						{% endif %}
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</tbody> 
+			<tfoot>
+				<tr><form action="calendar" method='GET'>
+  					View Month: <input type="date" name="month">
+  					<button class="btn btn-success" type="submit">Submit</button></form>
+				</tr>
+		</tfoot>
+		</table> 
+	</div> 
+</div>
+<br><br><br>
+
+
+<!--Add Matches-->
+<div align="center" class="span4">
+	<form action="calendar" method="POST">
+	{{form.hidden_tag()}}
+
+	{% from '_formhelper.html' import render_field %}
+	<!-- Begin error check-->
+	<dl>
+
+		<table align="center">
+			<th>{{form.game_date.description}}</th>
+			
+			<tr>
+				<td>{{render_field(form.game_date)}} </td>
+			</tr>	
+		</table>
+
+		<table>
+			<th>{{form.home_team.description}}</th>
+			<th>{{form.away_team.description}}</th>
+			
+			<tr>
+				<td>{{render_field(form.home_team)}} </td>
+				<td>{{render_field(form.away_team)}} </td>
+			</tr>	
+		</table>
+	</dl>
+
+	<!-- Button -->
+	<button class="btn btn-success">Set Game!</button>
+	</form>
+</div>
+
+<br><br><br>
+
+<!-- List of Games -->
+<div class="span10">
+	
+	<table class="text-center" border="2">	
+		<thead>
+		<tr>
+			<th> Game Date </th>
+			<th> Home Team </th>
+			<th> Opponent </th>
+			<th> Home  </th>
+			<th> Opponent </th>
+			<th> Delete </th>
+			<th> Home Score </th>
+			<th> Opponent Score </th>
+			<th> Edit </th>
+			<th> Update</th>
+		</tr>
+		</thead>
+		<tbody>
+		
+		{% for game in games %}	
+			{% for team in form.all_teams %}
+			   {% if team.id == game.home_team %}
+			<tr>
+				<td> {{game.game_date}} </td>
+				<td> {{teams.get(game.home_team)}} </td>
+				<td> {{teams.get(game.away_team)}} </td>
+				<td> {{game.home_score}} </td>
+				<td> {{game.away_score}} </td>
+				{% if game.game_saved == False %}
+				<td>
+					<form action='game_delete' method='POST'>
+					<button name='delete_game' value="{{game.id}}"><img src='static/img/delete.png'></form>
+				</td>
+			
+				<form action='game_edit' method='POST'>
+				{{form_s.hidden_tag()}}
+
+				<td> {{form_s.home_score}}</td>
+				<td> {{form_s.away_score}}</td>
+				<td><button class="btn btn-primary" name='edit_game' value="{{game.id}}"> Record Score </td>
+				</form>
+				
+				<form action='game_record' method='POST'>
+				{{form_s.hidden_tag()}}
+				<td>
+					<button class= "btn btn-success" name='record_game' value="{{game.id}}"> Save </td> 
+				</form>
+
+				{% else %}
+				<td></td>
+				<!-- Show updated ratings after save button selected -->
+				{% for rating in game.game_ratings %}
+					{% if rating.team_id == game.home_team %}
+				<td>Rating: {{rating.team_rating }}</td>
+					{% endif%}
+					{% if rating.team_id == game.away_team %}
+				<td>Rating: {{rating.team_rating}}</td>
+					{% endif %}
+				{% endfor %}
+				<td></td>
+				<td>
+					<form action='game_stats' method='GET'>
+					<button class= "btn btn-success" name="game" value='{{game.id}}'>Update Player Ratings</td> 
+					</form>
+				</td>
+				{% endif %}
+
+			<tr>
+
+
+				{% endif %}
+			{% endfor %}
+		{% endfor %}
+		</tbody>
+	<table>
+</div>
+
+{% endblock %}

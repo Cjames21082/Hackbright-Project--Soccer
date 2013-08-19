@@ -1,28 +1,33 @@
 {% extends 'base.html'%}
 
-
 {% block context %}
-  
-<form class="form-horizontal" action="/login" method="POST" name="login">
-{{form.hidden_tag()}}
-	<legend class="">Login</legend>
-    {% from "_formhelper.html" import render_field %}
-	<dl>
-		<!-- Email -->
-		<h3 class="google_label">Email </h3>
-		{{ render_field(form.email) }}
-		<!-- Password-->
-		<h3 class="google_label"> Password </h3>
-		{{ render_field(form.password) }}
-	</dl>
+<div class="background">
 
-		{% for message in get_flashed_messages() %}
-   		 <div>{{ message }}</div>
-  		{% endfor %}
-  		
-		<!-- Button -->
-		<br><button class="btn btn-success">Login</button>		
-</form>
+
+	<form action="/login" method="POST" >
+	{{form.hidden_tag()}}
+	    {% from "_formhelper.html" import render_field %}
+		<dl>
+			<!-- Email -->
+			<h3 class="google_label">Email </h3>
+			{{ render_field(form.email) }}
+			<!-- Password-->
+			<h3 class="google_label"> Password </h3>
+			{{ render_field(form.password) }}
+		</dl>
+
+			{% for message in get_flashed_messages() %}
+	   		 <div>{{ message }}</div>
+	  		{% endfor %}
+	  		
+			<!-- Button -->
+			<br><button class="btn btn-success">Login</button>		
+	</form>
+
+
+</div>
 
 {% endblock %}
+
+
 

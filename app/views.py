@@ -6,7 +6,7 @@ from flask.ext.login import LoginManager, login_user, logout_user, current_user,
 #connection to forms.py
 from forms import LoginForm, RegisterForm, RegisterContForm
 from forms import PostForm, TeamForm, SeasonCycleForm, EditProfileForm
-from forms import TeamCreateForm
+from forms import TeamCreateForm, GameForm, ScoreForm, PlayerStatForm
 
 # connection to flask object
 from server import app
@@ -20,6 +20,11 @@ from datetime import datetime
 
 #import config pagination
 from config import POSTS_PER_PAGE
+
+#import calendar
+import calendar, re
+
+from sqlalchemy import and_
 
 
 #------------End of Imports--------------#
@@ -49,11 +54,114 @@ def before_request():
 
 @app.route('/')
 def homepage():
+	# determine if registration is open
 	open_registration = model.registration()
+
+	season = model.current_season()
+	
+	if not season:
+		season = None
 	
 	return render_template('index.html',
 							title='Homepage',
-							open_registration= open_registration)
+							open_registration= open_registration,
+							season= season)
+
+
+@app.route('/calendar', methods=["GET", "POST"])
+@login_required
+def get_calendar():
+	form = GameForm()
+
+	today = request.args.get('month')
+
+	if today == None:
+		today = datetime.date(datetime.now())
+
+	print today
+	# --------calendar begins---------#
+	year = ['January', 
+			 'February', 
+			 'March', 
+			 'April', 
+			 'May', 
+			 'June', 
+			 'July', 
+			 'August', 
+			 'September', 
+			 'October', 
+			 'November', 
+			 'December'] 
+
+	# by default the calendar begin the week with Monday (day 0)
+	
+	calendar.setfirstweekday(calendar.SUNDAY)
+	
+	#stiringify date and reorganize into integers
+	current = re.split('-', str(today))
+
+	current_no = int(current[1])
+	current_month = year[current_no - 1]
+	current_day = int(re.sub('\A0', '',current[2]))
+	current_yr = int(current[0])
+
+
+	month = calendar.monthcalendar(current_yr, current_no) 
+	nweeks = len(month) 
+
+	each_week=[]
+	
+	for w in range(0,nweeks): 
+		week = month[w]
+		each_week.append(week)
+	#---------------calender ends-----------#
+
+	#-----add matches--------#
+	all_teams = model.current_teams()
+
+	teams={}	    
+	for t in all_teams:
+		teams[t.id]=t.teamname
+
+	# render template to set games
+	form= GameForm()
+
+	games = model.session.query(model.Game).\
+			order_by(model.Game.game_date.desc()).all()
+
+	if form.validate_on_submit():
+		if form.home_team.data == form.away_team.data:
+			flash("Teams cannot be the same")
+			return redirect('calendar')
+		else:
+			new_game= model.session.\
+					  add(model.Game(game_date = form.game_date.data,
+								home_team = form.home_team.data,
+								away_team = form.away_team.data,
+								home_score = form.home_score.data,
+								away_score = form.away_score.data))
+
+			model.session.commit()
+			flash('Game Added!')
+			return redirect('calendar')	
+
+	#----------render form to change score---#
+	form_s = ScoreForm()
+
+	return render_template('calendar.html',
+						    title='Calendar',
+						    current_month= current_month,
+						    current_yr= current_yr,
+						    each_week = each_week,
+						    user= current_user,
+						    form=form,
+						    games=games,
+						    form_s=form_s,
+							all_teams=all_teams,
+							teams=teams
+						    )
+
+
 
 @app.route('/edit', methods=["GET", "POST"])
 @login_required
@@ -92,6 +200,184 @@ def edit():
 							form=form)
 
 
+
+@app.route('/game_delete', methods=["POST"])
+@login_required
+def game_delete():
+	
+	delete_game = request.form['delete_game']
+
+
+	model.session.query(model.Game).\
+	filter(model.Game.id == int(delete_game)).\
+	delete()
+
+	model.session.commit()
+
+	return redirect('calendar')
+
+
+@app.route('/game_edit', methods=["GET", "POST"])
+@login_required
+def game_edit():
+	#---------Edit score for matches---------#
+	form_s = ScoreForm()
+
+	game_id= request.form['edit_game']
+	game= model.session.query(model.Game).get(int(game_id))
+
+	if form_s.validate_on_submit():
+		form_s.game_date = game.game_date
+		form_s.home_team = game.home_team
+		form_s.away_team = game.home_team
+		game.home_score = form_s.home_score.data
+		game.away_score = form_s.away_score.data
+
+		model.session.add(game)
+		model.session.commit()
+
+		flash('Your changes have been updated. Select \'Save\' to finalize!')
+		return redirect('calendar')
+
+
+@app.route('/game_stats', methods=['GET', 'POST'])
+@login_required
+def player_stats():	
+
+	form = PlayerStatForm()
+
+	game_id = request.args.get('game')
+	
+	if game_id == None:
+		game_id = request.form['game']
+
+	game = model.session.query(model.Game).get(game_id)
+	
+	player_stats = model.session.query(model.PlayerStat).\
+				   filter(model.PlayerStat.game_id == game_id).\
+				   all()
+	
+	#get team players
+	home_team = model.session.query(model.Team).get(game.home_team)
+	away_team = model.session.query(model.Team).get(game.away_team)
+	home_players = home_team.members
+	away_players = away_team.members
+	
+	if request.method == 'GET':
+
+		return render_template('player_update.html',
+							title='RecordPlayer',
+							form=form,
+							home_players = home_players,
+							away_players= away_players,
+							game = game,
+							player_stats= player_stats)
+
+	if request.method == 'POST':
+	#enter player data
+		if form.validate_on_submit():
+			game_id = request.form['game']
+			
+			player_name = request.form['name']
+			player = model.session.query(model.User).\
+					 get(player_name)
+			player_id = player.id
+			print player_id
+
+			dup_entry = model.session.query(model.PlayerStat).\
+						join(model.Game, model.Game.id == model.PlayerStat.game_id).\
+						filter(and_(model.Game.id == game_id,
+					    model.PlayerStat.player_id == player.id)).first()
+			
+			#check for duplicate entry
+
+			if dup_entry != None:
+				flash('Player entry already made. Delete and Re-Enter')
+				return redirect("game_stats?game=" + str(game_id))
+			else:
+				new_stat = model.session.add(model.PlayerStat(game_id= game_id,
+											 player_id= player_id,
+											 goals=form.goals.data,
+											 assists= form.assists.data,
+											 absence= form.absence.data,
+											 goalie_loss= form.goalie_loss.data,
+											 goalie_win= form.goalie_win.data))
+			
+				model.session.commit()
+				
+
+				last_entry = model.session.query(model.PlayerStat).\
+							 order_by(model.PlayerStat.id.desc()).first()
+
+				model.PlayerStat.calculate_stat(last_entry)
+				model.session.commit()
+				flash("Player Status Updated")
+
+				# refresh list of stats
+				player_stats = model.session.query(model.PlayerStat).\
+					   filter(model.PlayerStat.game_id == game_id).\
+					   all()
+				
+				return redirect("game_stats?game=" + str(game_id))
+						
+
+@app.route('/game_record', methods=["GET", "POST"])
+@login_required
+def update_teamRating():
+
+	game_id= request.form['record_game']
+	game= model.session.query(model.Game).get(int(game_id))
+
+	game.game_saved =True
+	model.session.add(game)
+	# Add win/loss/tie 
+	model.Game.calculate_score(game)
+	# commit all changes
+	model.session.commit()
+	
+	# Home calculations
+	home_id = game.home_team
+	home_rating = model.session.query(model.Team).\
+					  get(home_id).getRating()
+	
+	home_result= game.home_win + game.home_tie + game.home_loss
+	# Away calculations
+	away_id = game.away_team
+	away_rating = model.session.query(model.Team).\
+					  get(away_id).getRating()
+	
+	away_result= game.away_win + game.away_tie + game.away_loss
+	#Update team rating
+	expectation = model.getExpectation(home_rating, away_rating)
+	new_home_rating = model.modifyTeamRating(home_rating, expectation,home_result, 32)
+	new_away_rating = model.modifyTeamRating(away_rating, expectation,away_result, 32)
+	# Add new rating
+	model.session.add(model.TeamRating(team_id=game.home_team,
+									   game_id=game.id,
+									   team_rating= new_home_rating,
+									   expectation=expectation))
+
+	model.session.add(model.TeamRating(team_id=game.away_team,
+									   game_id=game.id,
+									   team_rating= new_away_rating,
+									   expectation=expectation))
+	model.session.commit()
+
+	# Update game record to calculate player ratings
+
+	home_diff = new_home_rating - home_rating
+	away_diff = new_away_rating - away_rating
+	game.expectation = expectation
+	game.home_differential = home_diff
+	game.away_differential = away_diff
+	model.session.add(game)
+	model.session.commit()
+
+
+	flash('Your changes have been saved!')
+	return redirect('calendar')
+
+
 @app.route('/login', methods=['GET','POST'])
 def login():
 	# determine if registration is open; checks flag
@@ -104,7 +390,9 @@ def login():
 	form = LoginForm()
 	if form.validate_on_submit():
 
-		user= model.session.query(model.User).filter_by(email=form.email.data, password=form.password.data).first()
+		user= model.session.query(model.User).\
+			  filter_by(email=form.email.data, password=form.password.data).\
+			  first()
 	
 		if user is not None:
 			login_user(user)	
@@ -127,6 +415,64 @@ def login():
 def logout():
 	logout_user()
 	return redirect('/')
+
+
+
+@app.route('/player_update', methods=['POST'])
+@login_required
+def update_playerRating():
+	game_id= request.form["game"]
+	stat_id= request.form["stats"]
+	player_id = request.form["player"]
+	
+	# retrieve player, team, game, and stat record
+	player_stat = model.session.query(model.PlayerStat).get(stat_id)
+
+	game= model.session.query(model.Game).get(game_id)
+
+	player= model.session.query(model.User).get(player_id)
+
+	team_id= model.session.query(model.TeamMember).\
+		  join(model.Team, model.Team.id == model.TeamMember.team_id).\
+		  join(model.User, model.User.id == model.TeamMember.player_id).\
+		  filter(model.User.id == player_id).\
+		  first()
+
+	team = model.session.query(model.Team).get(team_id.team_id)
+
+	#update player rating
+	diff = None
+	game_result = None
+	if game.home_team == team.id:
+		diff = game.home_differential
+		game_result = game.home_win + game.home_loss + game.home_tie
+	else:
+		diff = game.away_differential
+		game_result = game.away_win + game.away_loss + game.away_tie
+
+	
+	team_points = (float(player.getRating())/float(team.getRating())) * diff
+	current_rating = player.getRating()
+	kfactor = 32
+	strength = player_stat.strength
+	expectation = game.expectation
+
+	update_rating = model.modifyPlayerRating(current_rating, expectation, 
+											 game_result,strength, team_points, 
+											 kfactor)
+	model.session.add(model.PlayerRating(team_id=team.id,
+										 game_id=game_id,
+										 player_id= player_id,
+										 player_rating= update_rating))
+
+	# change stat record to save; user can no longer edit
+	player_stat.stat_saved = True
+	model.session.add(player_stat)
+
+	model.session.commit()
+
+	return redirect("game_stats?game=" + str(game_id))
+
 
 
 @app.route('/post_edit', methods=['POST'])
@@ -197,22 +543,13 @@ def register_cont():
 		current_user.willing_teamLeader = form.willing_teamLeader.data
 
 		# Add positions
-		if form.positions.data == [] and current_user.show_positions != []:
-			pass #don't change anything
-		
-		elif form.positions.data == [] and current_user.show_positions == []:
-			model.session.add(model.Position(user_id= current_user.id, position_type= 'none'))
-		
-		elif form.positions.data != [] and current_user.show_positions != []:
-			for old_position in current_user.positions:
-				model.session.delete(old_position)
+		if current_user.positions != []:
+			for position in current_user.positions:
+				model.session.delete(position)
 
-			for value in form.positions.data:
-				model.session.add(model.Position(user_id= current_user.id, position_type= value))
-		else:
-			for value in form.positions.data:
-				model.session.add(model.Position(user_id= current_user.id, position_type= value))
-	
+		for value in form.positions.data:
+			model.session.add(model.Position(user_id=current_user.id, position_type=value))
+
 
 		# Add health_issues
 		if current_user.health_issues != []:
@@ -385,6 +722,21 @@ def review_season():
 						past_cycle= past_cycle)
 
 
+@app.route('/stat_delete', methods=['POST'])
+@login_required
+def delete_stat():
+
+	game_id = request.form["game"]
+	stat_id = request.form["delete_stat"]
+	
+	player_stat = model.session.query(model.PlayerStat).get(stat_id)
+	
+	model.session.delete(player_stat)
+	model.session.commit()
+
+	return redirect("game_stats?game=" + str(game_id))
+
+
 @app.route('/teams', methods=['GET'])
 @login_required
 def teams():
@@ -397,11 +749,15 @@ def teams():
 @login_required
 def create_teams():
 
+	current_season = model.current_season()
+	print current_season
+
+
 	form= TeamCreateForm()
 
 	team_members = model.session.query(model.TeamMember).\
 				   join(model.Team, model.Team.id == model.TeamMember.team_id).\
-				   join(model.SeasonCycle, model.Team.seasoncycle == form.cycle.id)
+				   join(model.SeasonCycle, model.Team.seasoncycle == current_season.id)
 	
 
 	if form.validate_on_submit():
@@ -417,7 +773,8 @@ def create_teams():
 	return render_template('teams_create.html',
 							title='TeamCreate',
 							team_members=team_members,
-							form=form)
+							form=form, 
+							current_season=current_season)
 
 
 @app.route('/team_names', methods=['GET', 'POST'])
@@ -469,32 +826,30 @@ def teamname():
 @app.route('/team_leaders', methods=['GET','POST'])
 @login_required
 def role_assignment():
+	form= TeamCreateForm()
+
+	#Get team_id
+	team_list = request.args.get("list")
+	if team_list != None:
+		team_list = int(team_list)
+	else:
+		team_list = None
 	
+	# loan users to determine captain, admin, and teammembers
+	team_members = model.session.query(model.TeamMember).all()
+
 	users= model.session.query(model.User).\
 		   filter(model.User.user_registered == True)
 
+	admins= users.filter(model.User.role == ROLE_ADMIN).all()
+	captains = users.filter(model.User.role == ROLE_TEAMLEADER).all()
 	
 
-	if request.method == 'GET':
-		admins= users.filter(model.User.role == ROLE_ADMIN).all()
-		captains = users.filter(model.User.role == ROLE_TEAMLEADER).all()
-		count_players = model.session.query(model.User).count()
-		
+	count_players = model.session.query(model.User).count()
+	count_captains = len(captains)
+	count_admins = len(admins)
 
-		count_captains = len(captains)
-		count_admins = len(admins)
-
-
-		return render_template("team_leaders.html", 
-								users= users,
-								admins= admins,
-								captains= captains,
-								count_players=count_players,
-								count_captains= count_captains,
-								count_admins= count_admins)
-
-	if request.method == "POST":
-
+	if request.method == 'POST':
 		try:
 			captain = request.form["captain"]
 			player = model.session.query(model.User).get(int(captain))
@@ -506,7 +861,7 @@ def role_assignment():
 		try:
 			admin= request.form["admin"]
 			player = model.session.query(model.User).get(int(admin))
-			player.update_role(ROLE_ADMIN)
+			player.update_role(ROLE_ADMIN)	
 			print player.role
 		except KeyError:
 			pass
@@ -521,65 +876,42 @@ def role_assignment():
 
 		model.session.commit()
 
+		# refresh list
+		admins= users.filter(model.User.role == ROLE_ADMIN).all()
+		captains = users.filter(model.User.role == ROLE_TEAMLEADER).all()
+	
+	return render_template("team_leaders.html", 
+							users= users,
+							admins= admins,
+							captains= captains,
+							count_players=count_players,
+							count_captains= count_captains,
+							count_admins= count_admins,
+							form=form,
+							team_list=team_list,
+							team_members= team_members)
 
-	return redirect("team_leaders")
 
-
-
-@app.route('/team_leaders2', methods=['GET','POST'])
+@app.route('/team_save', methods=['GET','POST'])
 @login_required
-def more_captains():
-	
-	users= model.session.query(model.User).\
-		   filter(model.User.user_registered == True)
+def save_teams():
+	# change flag for season to saved= True
+	current_season = model.current_season()
+	current_season.saved =True
+	save_season = model.session.add(current_season)
+	current_teams = model.current_teams()
 
-	if request.method == 'GET':
-		admins= users.filter(model.User.role == ROLE_ADMIN).all()
-		captains = users.filter(model.User.role == ROLE_TEAMLEADER).all()
-		count_players = model.session.query(model.User).count()
+	#add intital team ratings
+	for team in current_teams:
+		team.getRating()
 
-		count_captains = len(captains)
-		count_admins = len(admins)
+	model.session.commit()
 
+	# This will disable team name and creation button
 
-		return render_template("team_leaders2.html", 
-								users= users,
-								admins= admins,
-								captains= captains,
-								count_players=count_players,
-								count_captains= count_captains,
-								count_admins= count_admins)
-
-	if request.method == "POST":
-
-		try:
-			captain = request.form["captain"]
-			player = model.session.query(model.User).get(int(captain))
-			player.update_role(ROLE_TEAMLEADER)
-			print player.role
-		except KeyError:
-			pass
-
-		try:
-			admin= request.form["admin"]
-			player = model.session.query(model.User).get(int(admin))
-			player.update_role(ROLE_ADMIN)
-			print player.role
-		except KeyError:
-			pass
-
-		try:
-			undo= request.form["undo"]
-			player = model.session.query(model.User).get(int(undo))
-			player.undo_role()
-			print player.role
-		except KeyError:
-			pass
-
-		model.session.commit()
+	return redirect('team_create')
 
 
-	return redirect("team_leaders2")
 
 
 @app.route('/user', methods=['GET','POST'])
@@ -599,7 +931,6 @@ def user():
 	#print current_cycle.cyclename
 	
 	users= model.session.query(model.User)
-
 	user = users.get(user_id)
 	
 	form= PostForm()
@@ -607,7 +938,7 @@ def user():
 	if form.validate_on_submit():
 		new_post = model.session.\
 				   add(model.Post(body=form.post.data,
-				   				  user_id= current_user.id))
+				   				  user_id= g.user.id))
 
 		model.session.commit()
 		flash('Your post is live!')

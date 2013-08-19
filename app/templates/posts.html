@@ -1,7 +1,7 @@
 <!-- This is a subtemplate -->
-{% for post in user.posts %}
+{% for post in user.show_posts() %}
 <form action='post_edit' method='POST'>
-	<table>
+	<table class="posts">
 		<tr valign="bottom">
 		  <td><img src= "{{post.user.avatar(50)}}"></td>
 		  <td> <i> {{post.user.fullname}} says: </i>

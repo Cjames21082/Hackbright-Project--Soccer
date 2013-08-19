@@ -16,150 +16,58 @@
    
     <!-- GoogleFont-->
     <link href='http://fonts.googleapis.com/css?family=Rye' rel='stylesheet' type='text/css'>
-
-    <style type="text/css">
-      .google_header{
-        font-family: 'Rye', serif;
-        font-size: 30px;
-        text-shadow: 4px 4px 4px #aaa;
-      }
-      
-      .google_label{
-        font-family: 'Rye', serif;
-        font-size: 14px;
-        text-shadow: 4px 4px 4px #aaa;
-        text-align: left
-      }
-
-  body{
-      background-image: linear-gradient(right bottom, rgb(113,226,230) 22%, rgb(221,255,148) 61%, rgb(242,242,196) 81%);
-background-image: -o-linear-gradient(right bottom, rgb(113,226,230) 22%, rgb(221,255,148) 61%, rgb(242,242,196) 81%);
-background-image: -moz-linear-gradient(right bottom, rgb(113,226,230) 22%, rgb(221,255,148) 61%, rgb(242,242,196) 81%);
-background-image: -webkit-linear-gradient(right bottom, rgb(113,226,230) 22%, rgb(221,255,148) 61%, rgb(242,242,196) 81%);
-background-image: -ms-linear-gradient(right bottom, rgb(113,226,230) 22%, rgb(221,255,148) 61%, rgb(242,242,196) 81%);
-
-background-image: -webkit-gradient(
-  linear,
-  right bottom,
-  left top,
-  color-stop(0.22, rgb(113,226,230)),
-  color-stop(0.61, rgb(221,255,148)),
-  color-stop(0.81, rgb(242,242,196))
-  );}
-
-    </style>
     <!-- End GoogleFont-->
-   
+
+    <style>
+    div.background{  
+      }
+
+    div.background:after {
+    content: "";
+    background-image: url('static/img/ball_img.jpg');
+    background-size: 100%;
+    opacity: 0.4;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;   
+      }   
+    </style>
 
   </head>
 
-  <body class="container-fluid">
-    <h3 class="google_header">No Sweat Soccer</h3>
-
-
-    <ul class="nav nav-tabs">
-      {% include 'links.html' %}
-
-    </ul>
+  
+  <body>
+    <div class='container-fluid'>
+      
+      <div class="span1"></div>
+      
+      <div class="span10">
 
     
+      <h3 class="google_header">No Sweat Soccer</h3>
 
-    <!--Dropdown Menu Scripts -->
-    <script type='text/javascript'
-    src='http://code.jquery.com/jquery-1.7.1.js'></script>
-    <link rel="stylesheet" type="text/css"
-          href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
-
-    <script>
-            /* bootstrap-dropdown.js v2.0.2
- 
-             * http://twitter.github.com/bootstrap/javascript.html#dropdowns
-             * ============================================================
-             * Copyright 2012 Twitter, Inc.
-             *
-             * Licensed under the Apache License, Version 2.0 (the "License");
-             * you may not use this file except in compliance with the License.
-             * You may obtain a copy of the License at
-             *
-             * http://www.apache.org/licenses/LICENSE-2.0
-             *
-             * Unless required by applicable law or agreed to in writing, software
-             * distributed under the License is distributed on an "AS IS" BASIS,
-             * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-             * See the License for the specific language governing permissions and
-             * limitations under the License.
-           */
-     !function( $ ){
-       "use strict"
-      /* DROPDOWN CLASS DEFINITION
-             * ========================= */
-            var toggle = '[data-toggle="dropdown"]'
-            , Dropdown = function ( element ) {
-                var $el = $(element).on('click.dropdown.data-api', this.toggle)
-                $('html').on('click.dropdown.data-api', function () {
-                    $el.parent().removeClass('open')
-                })
-            }
-            Dropdown.prototype = {
-                constructor: Dropdown
-                , toggle: function ( e ) {
-                    var $this = $(this)
-                    , selector = $this.attr('data-target')
-                    , $parent
-                    , isActive
- 
-                    if (!selector) {
-                        selector = $this.attr('href')
-                        selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
-                    }
- 
-                    $parent = $(selector)
-                    $parent.length || ($parent = $this.parent())
-                    isActive = $parent.hasClass('open')
-                    clearMenus()
-                        !isActive && $parent.toggleClass('open')
-                    return false
-                }
-            }
- 
-            function clearMenus() {
-                $(toggle).parent().removeClass('open')
-            }
-            /* DROPDOWN PLUGIN DEFINITION
-             * ========================== */
-            $.fn.dropdown = function ( option ) {
-                return this.each(function () {
-                    var $this = $(this)
-                    , data = $this.data('dropdown')
-                    if (!data) $this.data('dropdown', (data = new Dropdown(this)))
-                    if (typeof option == 'string') data[option].call($this)
-                })
-            }
-            $.fn.dropdown.Constructor = Dropdown
-            /* APPLY TO STANDARD DROPDOWN ELEMENTS
-             * =================================== */
-            $(function () {
-                $('html').on('click.dropdown.data-api', clearMenus)
-                $('body').on('click.dropdown.data-api', toggle, Dropdown.prototype.toggle)
-            })
-        }( window.jQuery );
-        </script>
-         
-        <script type='text/javascript'>//<![CDATA[
-        $(window).load(function(){
-            jQuery('.submenu').hover(function () {
-                jQuery(this).children('ul').removeClass('submenu-hide').addClass('submenu-show');
-            }, function () {
-                jQuery(this).children('ul').removeClass('.submenu-show').addClass('submenu-hide');
-            }).find("a:first").append(" &raquo; ");
-        });//]]>
-        </script>
-    <!-- End of Dropdown Menu-->
+      <ul class="nav nav-tabs">
+        {% include 'links.html' %}
+      </ul>
 
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+   
+    <script>
+      $('.dropdown-toggle').dropdown()
+    </script>
 
-    {%block context %}{%endblock%}
+    
+      {%block context %}
+
+      {%endblock%}
+    </div>
+    
+    <div class="span1"></div>
+  </div>
   </body>
 
 </html>

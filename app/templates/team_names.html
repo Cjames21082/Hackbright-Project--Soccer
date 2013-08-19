@@ -9,8 +9,10 @@
 			<td><th class="google_label"> Team Name </th></td>  
 			<td> {{form.teamname(placeholder='Cool Name Here!!')}}</td>
 			
-			{% if team_count != max_teams%}
+			{% if team_count != max_teams and current_season.saved != True %}
 			<td> <button type="submit" class="btn btn-success" >Add Team</button></td>
+			{% else %}
+			<p class="google_label"> Teams have been saved </p>
 			{% endif %}
 
 		</tr>
@@ -41,13 +43,13 @@
 <div class="text-center">
 	<button class="btn btn-success">
 		<h3 class ="google_label"> Step 2: </h3>
-		<a href='/team_leaders'>Team Leaders</a>
+		<a href='/team_create'>Team Creation</a>
 	</button>
 
 	
 	<button class="btn btn-success">
-		<h3 class ="google_label"> Step 3 </h3>
-		<a href='/team_create'>Team Creation </a>
+		<h3 class ="google_label"> Team Management </h3>
+		<a href='/teams'>Main Menu</a>
 	</button> 
 </div>
 

@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
-{% block context%}
 
-{{more_captains}}
+{% block context%}
 
 <!-- Captain Table -->
 <table class="span6">
@@ -39,26 +38,45 @@
 
 	<tr>
 		<th> Player </th>
+		<th> 
+		 <!-- Team Dropdown Menu -->
+		 <form action='team_leaders' method='GET' name='team_list'>
+		  	<select name='list'>
+		  		{%for team in form.teams%}
+				<option value="{{team.id}}">{{team.teamname}}</option>
+				{% endfor %}
+			</select>
+			<input type='submit' value='Show!!'>
+		
+		</form>
+		</th>
 		<th> Opted: Team Leader </th>
-		<th> Rating</th>
+		<th> Rating: </th>
 		<th> Assign Roles</th>
-		<th>Total Registered:{{count_players}}</th>
+		<th> Total Members:{{count_players}}</th>
 	
-	{% for player in users %}
-		{% if player.willing_teamLeader == True %}
+	
+	{% for player in team_members %}
+		{% if player.team_id == team_list %}
 			</tr>
-				<td> {{player.fullname}}</td>
+				<td> {{player.user.fullname}}</td>
 				
-				<td> Yes </td>
+				<td></td>
 
-				<td> Current Rating:{{player.getRating()}} </td>
+				{% if player.user.willing_teamLeader == True %}
+				<td> Yes </td>
+				{% else %}
+				<td> No </td>
+				{% endif %}
+
+				<td> Current Rating:{{player.user.getRating()}} </td>
 
 				<td> 
 				<form action = "" method="POST" name="change_role">
 				<div class="btn-group">
-					<button type="submit" class="btn btn-primary" name="captain" value="{{player.id}}" >Make Captain</button>
-					<button type="submit" class="btn btn-primary" name="admin" value="{{player.id}}">Make Admin</button>
-					<button type="submit" class="btn btn-danger" name="undo" value="{{player.id}}"> Reset Player</button>
+					<button type="submit" class="btn btn-primary" name="captain" value="{{player.user.id}}" >Make Captain</button>
+					<button type="submit" class="btn btn-primary" name="admin" value="{{player.user.id}}">Make Admin</button>
+					<button type="submit" class="btn btn-danger" name="undo" value="{{player.user.id}}"> Reset Player</button>
 				</div>
 				</form>
 				</td>
@@ -67,25 +85,16 @@
 	{% endfor %}
 </table>
 
-	<p class'google_label'><a href= 'team_leaders2'> Need more captains? Click Here. </a></p>
-
-	<div class="text-center">
+	
+<div class="text-center">
 
 	<br><br><br>
 
 	<button class="btn btn-success">
-		<h3 class ="google_label"> Step 1: </h3>
-		<a href='/team_names'>Team Names </a>
+		<h3 class ="google_label"> Team Management </h3>
+		<a href='/teams'> Main Menu </a>
 	</button>	
 
-	
-	<button class="btn btn-success">
-		<h3 class ="google_label"> Step 3 </h3>
-		<a href='/team_create'>Team Creation </a>
-	</button>
-
-
 </div>
-
 
 {% endblock %}

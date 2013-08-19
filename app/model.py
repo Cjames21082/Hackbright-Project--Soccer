@@ -4,6 +4,7 @@ import psycopg2
 #sqlalchemy properties
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from sqlalchemy import func
 from sqlalchemy import ForeignKey, Table, Column
 from sqlalchemy import Integer, String, DateTime, Boolean, Float, Date
 from sqlalchemy.orm import relationship, backref
@@ -13,10 +14,10 @@ from sqlalchemy.ext.associationproxy import association_proxy
 
 # avatar image
 from hashlib import md5
-#matching algorithm
-import eloalgorithm
 # timestamp default
 from datetime import datetime, date
+
+
 
 #--------End Imports-----------------#
 
@@ -67,25 +68,24 @@ class User(Base):
 	#--------Relationship to Other Tables--------#
 
 	# creates a one to many relationship and vice versa
-	positions = relationship('Position', backref=backref('user', lazy='joined'))
+	positions = relationship('Position', backref=backref('users', lazy='joined'))
 
 	posts = relationship('Post', backref=backref('user', lazy='joined'))
 
 	ratings = relationship('PlayerRating', backref=backref('user', lazy='joined'))
 
-	team = relationship('TeamMember', backref=backref('user', lazy='joined'))
+	teams = relationship('TeamMember', backref=backref('user', lazy='joined'))
 	
+	stats = relationship('PlayerStat', backref=backref('user',lazy='joined'))
 	#creates the relationship to HealthType thru 
 	# a many to many view
 	health_issues = relationship('HealthType',
 				secondary= 'users_health',
-				backref=backref('user', lazy='joined'))
+				backref=backref('users', lazy='joined'))
 
 	# proxy the 'issue' attribute from the 'health_issues' relationship
 	# to view health issues joined by the UserHealth table
 	health = association_proxy('health_issues','issue')
-
-
 	#--------------End Relationships----------------#
 
 	#-----------User Functions----------------------#
@@ -185,11 +185,38 @@ class User(Base):
 class Game(Base):
 	__tablename__= "games"
 	id = Column(Integer, primary_key=True) 
-	game_date = Column(DateTime)
+	game_date = Column(Date)
 	home_team = Column(Integer, ForeignKey('teams.id'))
 	away_team = Column(Integer, ForeignKey('teams.id'))
-	home_score = Column(Integer)
-	away_score = Column(Integer)
+	home_score = Column(Integer, default=0)
+	away_score = Column(Integer, default=0)
+	game_saved = Column(Boolean, default=False)
+	home_win = Column(Integer, default=0)
+	away_win = Column(Integer, default=0)
+	home_tie = Column(Float, default=0.00)
+	away_tie = Column(Float, default=0.00)
+	home_loss = Column(Integer, default=0)
+	away_loss = Column(Integer, default=0)
+	home_differential = Column(Float, default=0.00)
+	away_differential = Column(Float, default=0.00)
+	expectation = Column(Float, default= 0.00)
+
+	game_ratings = relationship('TeamRating', backref=backref('game', lazy='joined'))
+
+	def calculate_score(self):
+		if self.home_score > self.away_score:
+		   self.home_win = 1
+		   self.away_loss = -1
+		elif self.away_score > self.home_score:
+			self.away_win = 1
+			self.home_loss = -1
+		else:
+			self.home_tie = 0.50 
+			self.away_tie = 0.50
+		
+		session.add(self)		
+
+	
 
 class HealthType(Base):
 	# one to many table
@@ -220,12 +247,42 @@ class PlayerStat(Base):
 	id = Column(Integer, primary_key=True)
 	game_id = Column(Integer, ForeignKey('games.id'))
 	player_id= Column(Integer, ForeignKey('users.id'))
-	goals = Column(Integer)
+	goals = Column(Integer, default= 0)
 	absence = Column(Boolean, default = False)
 	goalie_win = Column(Boolean, default = False)
 	goalie_loss = Column(Boolean, default = False)
-	assists= Column(Integer)
-	strength= Column(Integer)
+	assists= Column(Integer, default= 0)
+	strength= Column(Integer, default= 0)
+	stat_saved=Column(Boolean, default=False)
+	
+	def calculate_stat(self):
+		if self.goals != 0:
+			goals = self.goals * 20
+		else:
+			goals = 0
+
+		if self.absence == False:
+			absence = 1
+		else:
+			absence = 0
+
+		if self.goalie_win == False:
+			goalie_win = 0
+		else:
+			goalie_win =50
+
+		if self.goalie_loss == False:
+			goalie_loss = 0
+		else:
+			goalie_loss =-50
+
+		if self.assists != 0:
+			assists = self.assists * 10
+		else:
+			assists = 0
+
+		self.strength = (goals + goalie_win + goalie_loss + assists)* absence
+		session.add(self)
 
 
 class Position(Base):
@@ -264,7 +321,10 @@ class SeasonCycle(Base):
 	fee_nonresident = Column(Float, default= 0.00)
 	reg_start = Column(DateTime)
 	reg_end = Column(DateTime)
+	# disable registration links
 	active = Column(Boolean, default=False)
+	# disable changing teams
+	saved = Column(Boolean, default=False)
 
 
 class Team(Base):
@@ -272,27 +332,48 @@ class Team(Base):
 	__tablename__= 'teams'
 	id = Column(Integer, primary_key=True)
 	seasoncycle= Column(Integer, ForeignKey('season_cycles.id'))
-	team_leader = Column(Integer, ForeignKey('users.id'))
 	teamname= Column(String(64))
-	team_wins= Column(Integer)
-	team_ties= Column(Integer)
-	team_losses= Column(Integer)
-	team_goals= Column(Integer)
+	team_wins= Column(Integer, default=0)
+	team_ties= Column(Integer, default=0)
+	team_losses= Column(Integer, default=0)
+	team_goals= Column(Integer, default=0)
+
+	ratings = relationship('TeamRating', backref=backref('team', lazy='joined'))
+
+	members = relationship('TeamMember', backref=backref('team', lazy='joined'))
+
 
 	def __repr__(self):
 		return '<Team %r>' %(self.teamname)
 
-	
+	def initialRating(self):
+		first_rating = 0
 
+		teamMembers = session.query(TeamMember).\
+					  filter(TeamMember.team_id == self.id).all()
+
+		for member in teamMembers:
+			first_rating = member.user.getRating()
+
+		session.add(TeamRating(team_id= self.id,
+							   team_rating=first_rating))
+
+		session.commit()
+		
 	def getRating(self):
 		
-		last= session.query(TeamRating).\
+		query = session.query(TeamRating).\
 					  join(Team, Team.id == TeamRating.team_id).\
-					  filter(Team.id == self.id).\
+					  filter(TeamRating.team_id == self.id).\
 					  order_by(TeamRating.team_rating.desc()).\
 					  first()
 
-		return last.team_rating
+		if query == None:
+			self.initialRating()
+			return self.getRating()
+		
+
+		return query.team_rating
 
 
 class TeamMember(Base):
@@ -302,6 +383,7 @@ class TeamMember(Base):
 	id = Column(Integer, primary_key=True)
 	team_id= Column(Integer, ForeignKey('teams.id'))
 	player_id = Column(Integer, ForeignKey('users.id'))
+	team_leader = Column(Integer, default= 0)
 
 
 class TeamRating(Base):
@@ -312,7 +394,8 @@ class TeamRating(Base):
 	id = Column(Integer, primary_key=True)
 	team_id = Column(Integer, ForeignKey('teams.id'))
 	game_id = Column(Integer, ForeignKey('games.id'))
-	team_rating = Column(Integer)
+	team_rating = Column(Integer, default=0)
+	
 
 
 class UserHealth(Base):
@@ -321,14 +404,28 @@ class UserHealth(Base):
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
 	health_id = Column(Integer, ForeignKey('health_types.id'))	
-	
-# #many to many - VIEW
-# health_table = Table('users_health', Base.metadata,
-# 	Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
-# 	Column('health_id', Integer, ForeignKey('health_types.id'), primary_key= True)
-# )
-
 ###  End class declarations
+
+
+#----------- Common Queries --------------------#
+
+def current_season():
+	cycle = session.query(SeasonCycle).\
+		   order_by(SeasonCycle.id.desc()).first()
+    
+    #return last cycle record
+	return cycle
+
+def current_teams():
+	#scalar(): to just read the first column of the first row and then close the result
+	cycle = session.query(func.max(SeasonCycle.id)).scalar()
+	
+	query= session.query(Team).\
+    	join(SeasonCycle,Team.seasoncycle == cycle).\
+    	join(TeamMember, TeamMember.team_id == Team.id).all()
+    
+    #return current season teams with members
+	return query
 
 #-----------Determine if registration is active--#
 def registration():
@@ -378,8 +475,24 @@ def calculate_experience(experience):
 
 	return new_experience * 10
 
+#-------------Modify Rating---------#
+def getExpectation(home_rating, away_rating):
+    calc = (1.0 / (1.0 + pow(10, ((home_rating- away_rating) / 400))));
+    return calc
+ 
+def modifyTeamRating(current_rating, expected, actual, kfactor):
+	return modifyRating(current_rating, expected, actual, kfactor)
+
+def modifyPlayerRating(last_rating, expected, actual,strength, team_points, kfactor):
+		current_rating = last_rating + strength + team_points 
+		return modifyRating(current_rating, expected, actual, kfactor)
+
+def modifyRating(current_rating, expected, actual, kfactor):
+	calc = (current_rating + kfactor * (actual - expected))
+	return calc
 
 
+#-------Calling module ------------#
 def main():
     """In case we need this for something"""
     pass
