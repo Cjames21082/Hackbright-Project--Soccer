@@ -46,14 +46,21 @@
       
       <div class="span10">
 
-    
       <h3 class="google_header">No Sweat Soccer</h3>
-
+      
       <ul class="nav nav-tabs">
         {% include 'links.html' %}
       </ul>
 
-    <script src="http://code.jquery.com/jquery.js"></script>
+      {% if open_registration == False %}
+      <p class="alert alert-danger google_label">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      Note: Registration closed at this time. </p>
+      {% endif%} 
+
+
+    <!--<script src="http://code.jquery.com/jquery.js"></script>-->
+    <script src="/static/js/jquery-2.0.3.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
    
     <script>

@@ -22,15 +22,14 @@ class EditProfileForm(Form):
 
 
 class GameForm(Form):	
-	all_teams = model.current_teams()
 		    	
 	game_date = DateField('Game Date', [validators.Required(message= (u'Game Date: mm/dd/yyyy'))], 
 						 format= '%m/%d/%Y', description=u'Game Date(mm/dd/yyyy)')
 	home_team = SelectField('Home', [validators.Required(message=(u'Select Team'))],
-							choices=[(str(i.id),i.teamname) for i in all_teams],
+							choices=[(str(i.id),i.teamname) for i in model.current_teams()],
 							description=u'Home Team')
 	away_team = SelectField('Away', [validators.Required(message=(u'Select Team'))],
-							choices=[(str(i.id),i.teamname) for i in all_teams],
+							choices=[(str(i.id),i.teamname) for i in model.current_teams()],
 							description=u'Opponent')
 	home_score = IntegerField('Home Score', [validators.Optional()],
 						 description=u'Home Score')
@@ -138,11 +137,19 @@ class SeasonCycleForm(Form):
 						 format= '%m/%d/%Y', description=u'Registration Ends (mm/dd/yyyy)')
 
 class TeamCreateForm(Form):
-	cycle = model.session.query(model.SeasonCycle).order_by(model.SeasonCycle.id.desc()).first()
-	teams = model.session.query(model.Team).join(model.SeasonCycle, model.Team.seasoncycle == cycle.id).all()
+	current_season = model.current_season()
+	# empty database
+	teams = None
+	all_teams = 0
+	# database has one or more seasons
+	if current_season!= None:
+		teams = model.session.query(model.Team).\
+				join(model.SeasonCycle, model.Team.seasoncycle == current_season.id).\
+				all()
+		all_teams = len(teams)
 
 	team_num = SelectField('Total Teams', [validators.Required()],
-							choices=[(str(i),i) for i in range(len(teams)+1)],
+							choices=[(str(i),i) for i in range(all_teams+1)],
 							description=u'Select Total Teams')
 
     

@@ -8,8 +8,12 @@
 <div>{{ message }}</div>
 {% endfor %}
 
+ 	<p class="alert alert-danger google_label">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	{{message}} </p>
+
 <!----------------Edit Active Cycle ------------>
-<div class="span6 background">
+<div class="">
 	<form action="/seasons_edit" method="POST" name="activecycle">
 	
 	{% include 'season_form.html' %}
@@ -21,7 +25,7 @@
 				<td><button type="submit" class="btn btn-success" name="current_season" value="edit">Edit Details</button><td>
 			</tr>
 		</table>
-	  	{% endif %}
+	  	
 	
 	<br>
 		<table>
@@ -29,7 +33,9 @@
 				<td><button type="submit" class="btn btn-success" name="current_season" value="close">Close Registration</button><td>
 			</tr>
 		</table>
+		{% endif %}
 	</form>
+
 	
 	<!-- Link to Create and View Seasons -->
 	<table>
@@ -39,7 +45,7 @@
 		</tr>
 	</table>
 
-	<h3 class="google_label"> {{message}} </h3>
+	
 
 </div>
 

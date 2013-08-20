@@ -1,10 +1,11 @@
 <!-- Links on navbar -->
 {% if g.user.is_authenticated() %}
-  <li class="active">
-    <a href="/">Home</a></li>
+  <br>
+  <li class="">
+    <a href="/"><i class="icon-home"></i>Home</a></li>
   <!-- Profile Dropdown Menu -->
-  <li class="dropdown active">
-    <a class="dropdown-toggle" data-toggle='dropdown'>
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle='dropdown'><i class="icon-user"></i>
       Profile <b class="caret"></b></a>
 
       <ul class="dropdown-menu">
@@ -19,8 +20,8 @@
     
     {% if g.user.role == 2 %}
       <!-- Admin Tools Dropdown Menu -->
-    <li class="dropdown active">
-    <a class="dropdown-toggle" data-toggle="dropdown">
+    <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown"><i class="icon-wrench"></i>
       Admin Tools <span class="caret"></span></a>
 
       <ul class="dropdown-menu">
@@ -36,27 +37,25 @@
     </li>
       {% endif %}
 
-    <li class="active">
-      <a href="{{url_for('logout')}}">Logout</a></li>
-  
+    <li class="">
+      <a href="{{url_for('logout')}}"><i class="icon-road"></i>Logout</a></li>
+
   <!-- User not authenticated -->
   {% else %}
 
-  <li class="active">
-    <a href="/">Home</a></li>
 
-  <li class="active">
-    <a href="{{url_for('login')}}">Login</a></li>
+  <li class="">
+    <a href="/"><i class="icon-home"></i>Home</a></li>
+
+  <li class="">
+    <a href="{{url_for('login')}}"><i class="icon-star"></i>Login</a></li>
   <!-- Disable Registration link if not open-->
  
     {% if open_registration == True %}
-     <li class="active">
-    <a href="{{url_for('register')}}">Create Account</a></li>
+     <li class="">
+    <a href="{{url_for('register')}}"><i class="icon-pencil"></i>Create Account</a></li>
     {% endif %}
     
-    {% if open_registration == False %}
-    <h3 class="google_label"> 
-    Note: Registration closed at this time. </h3>
-    {% endif%}  
+    
  
  {% endif %}

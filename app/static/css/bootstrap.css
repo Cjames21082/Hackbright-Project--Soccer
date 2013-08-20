@@ -948,12 +948,7 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-.table_third {
-  max-width: 30%;
-  background-color: transparent;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
+
 .table {
   width: 100%;
   margin-bottom: 20px;

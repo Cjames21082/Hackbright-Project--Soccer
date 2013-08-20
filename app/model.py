@@ -353,7 +353,7 @@ class Team(Base):
 					  filter(TeamMember.team_id == self.id).all()
 
 		for member in teamMembers:
-			first_rating = member.user.getRating()
+			first_rating += member.user.getRating()
 
 		session.add(TeamRating(team_id= self.id,
 							   team_rating=first_rating))

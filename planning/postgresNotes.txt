@@ -5,10 +5,28 @@ Step 2: See what the next value is
 		SELECT nextval('your_table_id_seq');
 		EX: SELECT nextval('users_id_seq')
 Step 3: Set the next value
-		SELECT setval('your_table_id_seq', [max(id)-1];
+		SELECT setval('your_table_id_seq', [max(id)+1]);
 
 
 Uploading csv Files:
 
-copy zip_codes from '/path/to/csv/ZIP_CODES.txt' CSV;
+Positions
+ copy positions from '/home/cassandra/codeTraining/soccerProject/seed_files/userposition.csv'CSV HEADER;
+
+Notes: Columns must be in order and table schema
+
+
+Postgres commands:
+\l show database
+\d show tables
+\dS+ show schema for table
+
+Reset Database:
+update season_cycles set saved=False;
+delete from only team_ratings;
+delete from only player_stats;
+delete from only player_ratings;
+delete from only games;
+
+
 

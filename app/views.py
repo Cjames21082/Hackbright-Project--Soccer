@@ -161,6 +161,29 @@ def get_calendar():
 							teams=teams
 						    )
 
+@app.route('/schedule', methods=["GET","POST"])
+@login_required
+def show_matches():
+
+	all_teams = model.current_teams()
+
+	teams={}	    
+	for t in all_teams:
+		teams[t.id]=t.teamname
+
+	games = model.session.query(model.Game).\
+			order_by(model.Game.game_date.desc()).all()
+
+	#----------render form to change score---#
+	form_s = ScoreForm()
+
+	return render_template('schedule.html',
+						    title='Matches',
+						    games=games,
+						    form_s=form_s,
+							all_teams=all_teams,
+							teams=teams
+						    )
 
 
 @app.route('/edit', methods=["GET", "POST"])
@@ -214,7 +237,7 @@ def game_delete():
 
 	model.session.commit()
 
-	return redirect('calendar')
+	return redirect('schedule')
 
 
 @app.route('/game_edit', methods=["GET", "POST"])
@@ -237,7 +260,7 @@ def game_edit():
 		model.session.commit()
 
 		flash('Your changes have been updated. Select \'Save\' to finalize!')
-		return redirect('calendar')
+		return redirect('schedule')
 
 
 @app.route('/game_stats', methods=['GET', 'POST'])
@@ -354,13 +377,11 @@ def update_teamRating():
 	# Add new rating
 	model.session.add(model.TeamRating(team_id=game.home_team,
 									   game_id=game.id,
-									   team_rating= new_home_rating,
-									   expectation=expectation))
+									   team_rating= new_home_rating))
 
 	model.session.add(model.TeamRating(team_id=game.away_team,
 									   game_id=game.id,
-									   team_rating= new_away_rating,
-									   expectation=expectation))
+									   team_rating= new_away_rating))
 	model.session.commit()
 
 	# Update game record to calculate player ratings
@@ -375,7 +396,7 @@ def update_teamRating():
 
 
 	flash('Your changes have been saved!')
-	return redirect('calendar')
+	return redirect('schedule')
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -460,10 +481,13 @@ def update_playerRating():
 	update_rating = model.modifyPlayerRating(current_rating, expectation, 
 											 game_result,strength, team_points, 
 											 kfactor)
-	model.session.add(model.PlayerRating(team_id=team.id,
-										 game_id=game_id,
-										 player_id= player_id,
-										 player_rating= update_rating))
+	print player_stat.absence
+
+	if player_stat.absence != True:
+		model.session.add(model.PlayerRating(team_id=team.id,
+											 game_id=game_id,
+											 player_id= player_id,
+											 player_rating= update_rating))
 
 	# change stat record to save; user can no longer edit
 	player_stat.stat_saved = True
@@ -750,10 +774,13 @@ def teams():
 def create_teams():
 
 	current_season = model.current_season()
-	print current_season
+	teams = model.session.query(model.Team).\
+				join(model.SeasonCycle, model.Team.seasoncycle == current_season.id).\
+				all()
 
 
 	form= TeamCreateForm()
+
 
 	team_members = model.session.query(model.TeamMember).\
 				   join(model.Team, model.Team.id == model.TeamMember.team_id).\
@@ -774,7 +801,8 @@ def create_teams():
 							title='TeamCreate',
 							team_members=team_members,
 							form=form, 
-							current_season=current_season)
+							current_season=current_season,
+							teams=teams)
 
 
 @app.route('/team_names', methods=['GET', 'POST'])
@@ -879,6 +907,8 @@ def role_assignment():
 		# refresh list
 		admins= users.filter(model.User.role == ROLE_ADMIN).all()
 		captains = users.filter(model.User.role == ROLE_TEAMLEADER).all()
+		count_captains = len(captains)
+		count_admins = len(admins)
 	
 	return render_template("team_leaders.html", 
 							users= users,
@@ -898,11 +928,10 @@ def save_teams():
 	# change flag for season to saved= True
 	current_season = model.current_season()
 	current_season.saved =True
-	save_season = model.session.add(current_season)
-	current_teams = model.current_teams()
+	model.session.add(current_season)
 
 	#add intital team ratings
-	for team in current_teams:
+	for team in model.current_teams():
 		team.getRating()
 
 	model.session.commit()

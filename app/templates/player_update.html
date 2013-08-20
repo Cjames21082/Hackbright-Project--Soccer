@@ -3,13 +3,17 @@
 
 {% block context%}
 
+{% for message in get_flashed_messages() %}
+<div class= "alert alert-success google_label">{{ message }}</div>
+{% endfor %}
+
 <h3 class="google_header">
 Home Score: {{game.home_score}} - Opponent Score: {{game.away_score}}
 </h3>
 <br> <a href='calendar'> Back to Calendar </a>
 
 <div>
-	<table border="2" class="span4">
+	<table class="table-third span4">
 		<th> Home Team: Players</th>
 		
 		<form action='game_stats' method='POST' name='player_rating'>
@@ -28,15 +32,15 @@ Home Score: {{game.home_score}} - Opponent Score: {{game.away_score}}
 			<dl> <!-- Begin form.error check -->
 					
 			<tr>
-				<td> {{form.goals.description}}
+				<td> {{form.goals.description}}<br>
 					 {{form.goals}} <br>
-					 {{form.assists.description}}
+					 {{form.assists.description}}<br>
 				 	 {{form.assists}} <br>
-					 {{form.goalie_win.description}}
+					 {{form.goalie_win.description}}<br>
 					 {{form.goalie_win}} <br>
-					 {{form.goalie_loss.description}}
+					 {{form.goalie_loss.description}}<br>
 					 {{form.goalie_loss}} <br>
-					 {{form.absence.description}}
+					 {{form.absence.description}}<br>
 					 {{form.absence}}</td>			
 			</tr>
 
@@ -47,7 +51,7 @@ Home Score: {{game.home_score}} - Opponent Score: {{game.away_score}}
 		</form>
 	</table>
 
-	<table border="2" class="span4">
+	<table class="table-third span4">
 		<th> Opponent Team: Players</th>
 
 		<form action='game_stats' method='POST' name='player_rating'>
@@ -66,15 +70,15 @@ Home Score: {{game.home_score}} - Opponent Score: {{game.away_score}}
 			<dl> <!-- Begin form.error check -->
 					
 			<tr>
-				<td> {{form.goals.description}}
+				<td> {{form.goals.description}}<br>
 					 {{form.goals}} <br>
-					 {{form.assists.description}}
+					 {{form.assists.description}}<br>
 				 	 {{form.assists}} <br>
-					 {{form.goalie_win.description}}
+					 {{form.goalie_win.description}}<br>
 					 {{form.goalie_win}} <br>
-					 {{form.goalie_loss.description}}
+					 {{form.goalie_loss.description}}<br>
 					 {{form.goalie_loss}} <br>
-					 {{form.absence.description}}
+					 {{form.absence.description}}<br>
 					 {{form.absence}}</td>				
 			</tr>
 
@@ -85,21 +89,14 @@ Home Score: {{game.home_score}} - Opponent Score: {{game.away_score}}
 	</table>
 </div>
 
-<div>
-	<table class="span4" width="30%" height="30%">
-		<br></br><br></br><br></br>
-		<br></br><br></br><br></br>
-		<br></br><br></br><br></br>
-	</table>
-</div>
 
-{% for message in get_flashed_messages() %}
-<div class="span8"><h3 class="google_label">{{ message }}</h3></div>
-{% endfor %}
+		<br></br><br></br><br></br>
+		<br></br><br></br><br></br>
 
+	
 	<!-- Game Result for Players -->
 <div>
-	<table border="2" class="span8">
+	<table class="table">
 		<th colspan="8"> Player Stats: {{game.game_date}}</th>
 		<tr><th> Player </th>
 			<th> Goals </th>
@@ -141,7 +138,7 @@ Home Score: {{game.home_score}} - Opponent Score: {{game.away_score}}
 			<td>
 				<form action='stat_delete' method='POST'>
 				<input type="hidden" name='game' value='{{game.id}}'>
-					<button name='delete_stat' value="{{stat.id}}"><img src='static/img/delete.png'>
+					<button name='delete_stat' value="{{stat.id}}"><i class="icon-remove"></i></button>
 					</form></td>
 			<td>
 				<form action='player_update' method='POST'>

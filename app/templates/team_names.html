@@ -12,7 +12,9 @@
 			{% if team_count != max_teams and current_season.saved != True %}
 			<td> <button type="submit" class="btn btn-success" >Add Team</button></td>
 			{% else %}
-			<p class="google_label"> Teams have been saved </p>
+			 <p class="alert alert-danger google_label">
+      		<button type="button" class="close" data-dismiss="alert">&times;</button>
+     		 Teams have been saved.</p>
 			{% endif %}
 
 		</tr>
