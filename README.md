@@ -8,7 +8,7 @@ It has two core functions-
 
 The Game:
 -------------
-This project was built with Python using the Flask framework and Postgresql to store the data. On the front end, I used Bootstrap and some javascript. The core functions were inspired by the the elo rating system- a method for calculating the relative skill levels of players in competitor-versus-competitor games. 
+This project was built with Python using the Flask framework and Postgresql to store the data. On the front end, I used Bootstrap and some javascript. The core functions were inspired by the the elo rating system (http://en.wikipedia.org/wiki/Elo_rating_system)- a method for calculating the relative skill levels of players in competitor-versus-competitor games. 
 
 The Teams (create_teams.py)
 ---------------------------
@@ -39,7 +39,7 @@ This app is written in Python using the Flask framework. WTF Forms(forms.py) wer
 
 The app contains a function that modifies a team rating by the following:
 * determine the odds (percentage) between competitors using their current rating
-* modify rating using the team's current rating, the expected result, the actual result, and a kfactor ![See Elo Rating](http://en.wikipedia.org/wiki/Elo_rating_system)
+* modify rating using the team's current rating, the expected result, the actual result, and a kfactor
 
 The app also modifies a player rating. Additional factors are considered in a player's rating. A player receives a game strength based on their game stats. The player also receives a portion of the win/loss difference from the team ratings. With this data the player's rating is modified based on the elo rating algorithm.
 
