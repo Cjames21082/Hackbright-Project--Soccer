@@ -22,7 +22,7 @@ def team_generate(n_teams):
 	teams = zip(*[iter(sorted_rating)]* n_teams)
 	#print teams
 	
-	# shuffle list by reversing every odd row backwards
+	# randomize matrix by reversing every odd row backwards
 	count = 1
 	shuffled_list =[]
 	for row in teams:
@@ -79,6 +79,6 @@ def team_generate(n_teams):
 								   player_id=player[1]))
 		session.commit()
 
-
+# Tests
 # team_generate(5)
 # team_generate(3)

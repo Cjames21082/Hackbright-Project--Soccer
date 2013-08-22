@@ -1,16 +1,63 @@
-Hackbright-Project--Soccer
+No Sweat Soccer
 ==========================
 
-Project Idea: Soccer Team Mgmt Web Application
+No Sweat Soccer is a webapp and management tool for administators in a recreational soccer league.
+It has two core functions-
+* Create balance teams through player analysis and historical ratings
+* Track team and player strength through game performance
 
-Concept: 
-Web application- Team management tool used to create 
-and organize a team league (i.e soccer) with four main functons:
+The Game:
+-------------
+This project was built with Python using the Flask framework and Postgresql to store the data. On the front end, I used Bootstrap and some javascript. The core functions were inspired by the the elo rating system- a method for calculating the relative skill levels of players in competitor-versus-competitor games. 
 
-1) Player Strength: analyze registered players based on initial    
-   self evaluation and historical stats from previous seasons
-2) Team creation: generate balanced teams based on player strength
-3) Send social and team emails from admin, team captian, player
-4) Search and find other team leagues (i.e soccer) near user's     
-   hometown.
+The Teams:(create_teams.py)
+---------------------------
+I used hash mapping to retrieve registered players, sort, and divide them into a variable number of teams.
+
+The team genaration is a automatic feature for the end user. The admin selects the number of desired teams and clicks "Create Magic"
+/home/cassandra/codeTraining/soccerProject/app/static/img
+
+
+The Defense: (model.py)
+------------------------
+A team is only as strong as their defense. 
+
+In this project I used the following-
+
+Relational Database- Postgresql 
+Currently, there are 12 different tables to manage player and team information.
+The User class interacts primarily with the Player_pating, TeamMember, and Game class to pull data needed to update the user's rating. 
+The Team class interacts mostly with the Game and SeasonCycle class to monitor teams updates.
+
+ORM- SQLAlchemy with Python
+
+Migration Manager- Alembic 
+
+The Midfield:(views.py)
+-------------------------
+This app is written in Python using the Flask framework. WTF Forms(forms.py) were created to gather user input from the browser.
+
+The app contains a function that modifies a team rating by the following:
+* determine the odds (percentage) between competitors using their current rating
+* modify rating using the team's current rating, the expected result, the actual result, and a kfactor <a herf= "http://en.wikipedia.org/wiki/Elo_rating_system"> See Elo Rating System</a>
+
+The app also modifies a player rating. Additional factors are considered in a player's rating. A player receives a game strength based on their game stats. The player also receives a portion of the win/loss difference from the team ratings. With this data the player's rating is modified based on the elo rating algorithm.
+
+
+Offense: (static/templates folders)
+-------------------------------------
+Flask template pages, Bootstrap, and javascript is used for displaying information.
+
+
+Overtime: Future Steps
+---------------
+Data: 
+There are additional factors to analyze a player's strength that I want to investigate
+(i.e. likeliness of injury considering age, partime players vs. fulltime players, player's main position, etc.)
+Presentation: 
+Improve design and layout for user using javascript and jQuery
+              Adding additional features such as email and search option
+              Create visual analysis of team and player strength over a time range
+Server: 
+Improve processing time (research using a non-relational db for queries)
 
