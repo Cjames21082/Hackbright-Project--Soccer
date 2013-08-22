@@ -15,7 +15,7 @@ The Teams (create_teams.py)
 I used hash mapping to retrieve registered players, sort, and divide them into a variable number of teams.
 
 The team genaration is a automatic feature for the end user. The admin selects the number of desired teams and clicks "Create Magic"
-![Create Team](https://github.com/Cjames21082/Hackbright-Project--Soccer/blob/master/app/static/img/create_teams.png)
+![Create Team](https://raw.github.com/Cjames21082/Hackbright-Project--Soccer/master/app/static/img/create_teams.png)
 
 
 The Defense (model.py)
@@ -44,11 +44,11 @@ The app contains a function that modifies a team rating by the following:
 The app also modifies a player rating. Additional factors are considered in a player's rating. A player receives a game strength based on their game stats. The player also receives a portion of the win/loss difference from the team ratings. With this data the player's rating is modified based on the elo rating algorithm.
 
 Step 1: Set Match
-![Team Rating](https://github.com/Cjames21082/Hackbright-Project--Soccer/master/app/static/img/set_match.png)
+![Team Rating](https://raw.github.com/Cjames21082/Hackbright-Project--Soccer/master/app/static/img/set_match.png)
 Step 2: Record Score
-![Team Rating](https://github.com/Cjames21082/Hackbright-Project--Soccer/master/app/static/img/team_rating.png)
+![Team Rating](https://raw.github.com/Cjames21082/Hackbright-Project--Soccer/master/app/static/img/team_rating.png)
 Step 3: Update Players
-![Team Rating](https://github.com/Cjames21082/Hackbright-Project--Soccer/master/app/static/img/player_rating.png)
+![Team Rating](https://raw.github.com/Cjames21082/Hackbright-Project--Soccer/master/app/static/img/player_rating.png)
 
 
 Offense (static/templates folders)
