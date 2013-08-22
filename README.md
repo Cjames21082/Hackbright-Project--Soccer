@@ -15,7 +15,7 @@ The Teams:(create_teams.py)
 I used hash mapping to retrieve registered players, sort, and divide them into a variable number of teams.
 
 The team genaration is a automatic feature for the end user. The admin selects the number of desired teams and clicks "Create Magic"
-https://github.com/Cjames21082/Hackbright-Project--Soccer/tree/master/app/static/img/create_teams.png)
+(https://github.com/Cjames21082/Hackbright-Project--Soccer/tree/master/app/static/img/create_teams.png)
 
 
 The Defense: (model.py)
