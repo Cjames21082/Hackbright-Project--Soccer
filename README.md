@@ -15,7 +15,7 @@ The Teams:(create_teams.py)
 I used hash mapping to retrieve registered players, sort, and divide them into a variable number of teams.
 
 The team genaration is a automatic feature for the end user. The admin selects the number of desired teams and clicks "Create Magic"
-/home/cassandra/codeTraining/soccerProject/app/static/img
+[Create Magie!](https://github.com/Cjames21082/Hackbright-Project--Soccer/tree/master/app/static/img/create_teams.png)
 
 
 The Defense: (model.py)
@@ -51,13 +51,13 @@ Flask template pages, Bootstrap, and javascript is used for displaying informati
 
 Overtime: Future Steps
 ---------------
-Data: 
+* Data: 
 There are additional factors to analyze a player's strength that I want to investigate
 (i.e. likeliness of injury considering age, partime players vs. fulltime players, player's main position, etc.)
-Presentation: 
+* Presentation: 
 Improve design and layout for user using javascript and jQuery
               Adding additional features such as email and search option
               Create visual analysis of team and player strength over a time range
-Server: 
+* Server: 
 Improve processing time (research using a non-relational db for queries)
 
