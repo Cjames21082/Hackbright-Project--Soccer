@@ -22,14 +22,15 @@ class EditProfileForm(Form):
 
 
 class GameForm(Form):	
+	teams= model.current_teams()
 		    	
 	game_date = DateField('Game Date', [validators.Required(message= (u'Game Date: mm/dd/yyyy'))], 
 						 format= '%m/%d/%Y', description=u'Game Date(mm/dd/yyyy)')
 	home_team = SelectField('Home', [validators.Required(message=(u'Select Team'))],
-							choices=[(str(i.id),i.teamname) for i in model.current_teams()],
+							choices=[(str(i.id),i.teamname) for i in teams],
 							description=u'Home Team')
 	away_team = SelectField('Away', [validators.Required(message=(u'Select Team'))],
-							choices=[(str(i.id),i.teamname) for i in model.current_teams()],
+							choices=[(str(i.id),i.teamname) for i in teams],
 							description=u'Opponent')
 	home_score = IntegerField('Home Score', [validators.Optional()],
 						 description=u'Home Score')

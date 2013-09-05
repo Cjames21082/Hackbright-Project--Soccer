@@ -14,7 +14,7 @@ from server import app
 # connection to model.py
 from model import ROLE_ADMIN, ROLE_TEAMLEADER, ROLE_USER
 import model
-import create_team
+import test
 
 from datetime import datetime
 
@@ -781,7 +781,6 @@ def create_teams():
 
 	form= TeamCreateForm()
 
-
 	team_members = model.session.query(model.TeamMember).\
 				   join(model.Team, model.Team.id == model.TeamMember.team_id).\
 				   join(model.SeasonCycle, model.Team.seasoncycle == current_season.id)
@@ -794,7 +793,7 @@ def create_teams():
 
 			model.session.commit()
 
-		create_team.team_generate(int(form.team_num.data))
+		test.team_generate(int(form.team_num.data))
 
 	
 	return render_template('teams_create.html',

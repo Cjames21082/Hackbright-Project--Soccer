@@ -17,6 +17,7 @@ def team_generate(n_teams):
 
 	# dictionary sorted from lowest to highest
 	sorted_rating = sorted(rating.iteritems(), key=lambda (k,v):(v,k))
+	# sorted_rating = sorted(registered_players, key=lambda i: i.getRating())
 
 	#divides the scores into groups lowest to highest
 	teams = zip(*[iter(sorted_rating)]* n_teams)
@@ -82,3 +83,4 @@ def team_generate(n_teams):
 # Tests
 # team_generate(5)
 # team_generate(3)
+
